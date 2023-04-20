@@ -1,0 +1,157 @@
+﻿@page
+@model DAWPI.Pages.Register.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<style>
+    /* Estilos para el formulario */
+    form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 32px;
+        border-radius: 4px;
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #f8f9fa;
+    }
+
+    fieldset {
+        border: none;
+    }
+
+    legend {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 12px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+    }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+    .submit {
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .submit:hover {
+            background-color: #0056b3;
+        }
+
+    hr {
+        width: 100%;
+        border: none;
+        border-top: 1px solid #ccc;
+        margin-top: 24px;
+        margin-bottom: 16px;
+    }
+
+    p {
+        color: red;
+        margin-top: 4px;
+    }
+
+    /* Estilos adicionales para consulta médica */
+    body {
+        background-color: #f3f3f3;
+        font-family: Arial, sans-serif;
+    }
+
+    legend {
+        color: #007bff;
+    }
+
+    label {
+        color: #007bff;
+    }
+
+    .submit {
+        background-color: #007bff;
+    }
+
+        .submit:hover {
+            background-color: #0056b3;
+        }
+
+    
+</style>
+
+<div>
+    <form method="post">
+        <fieldset>
+            <legend>Register</legend>
+            <div>
+                <label for="nombre">Nombre y apellidos</label>
+                <input type="text" name="nombre" id="nombre" value="" placeholder="Nombre y apellidos" required>
+            </div>
+            <br />
+            <div>
+                <label for="movil">Teléfono</label>
+                <input type="text" name="movil" id="movil" value="" placeholder="Teléfono" required>
+            </div>
+            <br />
+            <div>
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="" placeholder="Email" required>
+            </div>
+            <br />
+            <div>
+                <label for="contrasenia">Clave de acceso</label>
+                <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Clave de acceso" maxlength="16" required>
+            </div>
+            <br />
+            <div>
+                <label for="valContrasenia">Repetir clave</label>
+                <input type="password" name="contrasenia2" value="" id="contrasenia2" placeholder="Repetir clave" maxlength="16" required>
+            </div>
+            <br />
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+            <div>
+                <button type="submit" asp-page-handler="Submit" class="submit">Registrar</button>
+            </div>
+            <hr />
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,83 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Página de inicio";
+}
+<style>
+    body {
+        background-image: url('css/fondo.jpg');
+        background-size: cover;
+        background-position: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .title {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 50px;
+        font-size: 36px;
+        color: #333;
+    }
+
+    .paragraph {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        font-size: 18px;
+        color: #555;
+    }
+
+    .logo {
+        margin-top: 20px;
+    }
+
+        .logo img {
+            max-width: 200px;
+            border-radius: 10px;
+        }
+</style>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de inicio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cvJ2vYYIcEL727kskC66kF/0abwTE" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+
+    <script>
+        AOS.init({
+            duration: 1000, // Duración de la animación en milisegundos
+            once: true, // Animación se ejecuta solo una vez
+            easing: 'ease-in-out', // Tipo de aceleración de la animación
+            anchorPlacement: 'top-bottom', // Dirección de la animación ('top-bottom', 'bottom-top', 'left-right', 'right-left')
+            startEvent: 'DOMContentLoaded', // Evento que activa la animación (puedes cambiarlo según tus necesidades)
+        });
+    </script>
+</head>
+<body>
+
+    <div class="container text-center">
+        <div class="content">
+            <div class="logo" data-aos="fade-up">
+                <img src="/css/logo3.png" alt="Logo" class="img-fluid">
+            </div>
+            <br>
+            <h1 class="title display-4" data-aos="fade">Bienvenido a nuestra consulta médica</h1>
+            <h3 class="paragraph" data-aos="fade">Ofrecemos servicios de atención médica de calidad para tu bienestar</h3>
+            <p class="paragraph" data-aos="fade">¡Bienvenido a nuestra consulta médica! Nos complace ofrecerte servicios de atención médica de calidad para tu bienestar. Nuestro equipo de médicos altamente capacitados y amables está dedicado a proporcionarte el mejor cuidado médico posible. Nos preocupamos por tu salud y estamos comprometidos en brindarte un enfoque integral y personalizado para abordar tus necesidades de salud. Ya sea que necesites una consulta médica general, una evaluación especializada o un tratamiento específico, estamos aquí para ayudarte. Nos enorgullecemos de brindar un ambiente cálido y acogedor donde te sientas cómodo y confiado en recibir la atención médica que mereces. ¡Es un placer servirte y esperamos ser tu elección confiable para tus necesidades de atención médica!</p>
+        </div>
+    </div>
+
+</body>
+</html>
