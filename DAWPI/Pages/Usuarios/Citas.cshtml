@@ -3,3 +3,35 @@
 @{
     ViewData["Title"] = "Citas";
 }
+
+<div class="container">
+    <h2>Listado de citas</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Asunto</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Sala</th>
+                <th>Planta</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cita in Model.listaCitasDTO)
+            {
+                <tr>
+                    <td>@cita.Asunto</td>
+                    <td>@cita.Fecha</td>
+                    <td>@cita.Hora</td>
+                    <td>@cita.CodSala</td>
+                    <td>@cita.CodPlanta</td>
+                    <td>@cita.EstadoCita</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

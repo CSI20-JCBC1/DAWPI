@@ -60,13 +60,14 @@ namespace DAWPI.Pages.Login
                     var claims = new List<Claim> // Se crea una lista de reclamaciones para la identidad del usuario
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Email), // Se crea una reclamación para el identificador de nombre del usuario
-                        new Claim(ClaimTypes.Role, ControlAcceso) // Se crea una reclamación para el rol del usuario
+                        new Claim(ClaimTypes.Role, ControlAcceso), // Se crea una reclamación para el rol del usuario
+                        new Claim("EmailUsuario", usuario.Email) // Se guarda el email en la sesion.
                     };
 
                     var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
                     await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
 
-                    TempData["Email"] = Email;
+                    
                 }
                 else
                 {
