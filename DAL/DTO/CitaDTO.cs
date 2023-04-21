@@ -40,11 +40,28 @@ namespace DAL.DTO
         private string? estadoCita;
 
         //Constructores
-        public CitaDTO(int id, string asunto, string nombrePaciente, DateOnly fecha, string sintomas, string nombreMedico, TimeOnly hora, string codPlanta, string codSala, string enfermedad, string solucion, string estadoCita)
+        public CitaDTO(int id, string asunto, string nombrePaciente, string sintomas, DateOnly fecha, TimeOnly hora, string nombreMedico, string codPlanta, string codSala, string enfermedad, string solucion, string estadoCita)
         {
             this.MdUuid = Guid.NewGuid().ToString();
             this.MdDate = DateTime.Now;
             this.Id = id;
+            this.Asunto = asunto;
+            this.NombrePaciente = nombrePaciente; 
+            this.Sintomas = sintomas;
+            this.Fecha = fecha;
+            this.NombreMedico = nombreMedico;
+            this.Hora = hora;
+            this.CodPlanta = codPlanta;
+            this.CodSala = codSala;
+            this.Enfermedad = enfermedad;
+            this.Solucion = solucion;
+            this.EstadoCita = estadoCita;
+        }
+
+        public CitaDTO(string asunto, string nombrePaciente, string sintomas, DateOnly fecha, TimeOnly hora, string nombreMedico, string codPlanta, string codSala, string enfermedad, string solucion, string estadoCita)
+        {
+            this.MdUuid = Guid.NewGuid().ToString();
+            this.MdDate = DateTime.Now;
             this.Asunto = asunto;
             this.NombrePaciente = nombrePaciente;
             this.Fecha = fecha;
@@ -58,21 +75,15 @@ namespace DAL.DTO
             this.EstadoCita = estadoCita;
         }
 
-        public CitaDTO(string asunto, string nombrePaciente, DateOnly fecha, string sintomas, string nombreMedico, TimeOnly hora, string codPlanta, string codSala, string enfermedad, string solucion, string estadoCita)
+        public CitaDTO(string asunto, string nombrePaciente, string sintomas, string codPlanta)
         {
             this.MdUuid = Guid.NewGuid().ToString();
             this.MdDate = DateTime.Now;
+            this.Id = id;
             this.Asunto = asunto;
             this.NombrePaciente = nombrePaciente;
-            this.Fecha = fecha;
             this.Sintomas = sintomas;
-            this.NombreMedico = nombreMedico;
-            this.Hora = hora;
             this.CodPlanta = codPlanta;
-            this.CodSala = codSala;
-            this.Enfermedad = enfermedad;
-            this.Solucion = solucion;
-            this.EstadoCita = estadoCita;
         }
 
         public CitaDTO( )

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Citas";
 }
 
+<form method="post">
 <div class="container">
     <h2>Listado de citas</h2>
     <table class="table">
@@ -31,7 +32,13 @@
             }
         </tbody>
     </table>
+    
 </div>
+
+<button asp-page-handler="Crear" class="btn btn-success btn-sm" type="submit">Nueva Cita</button>
+    <br />
+    <br />
+</form>
 
 
 

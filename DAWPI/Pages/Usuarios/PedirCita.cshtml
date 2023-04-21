@@ -1,4 +1,39 @@
 ﻿@page
 @model DAWPI.Pages.Usuarios.PedirCitaModel
 @{
+    ViewData["Title"] = "Pedir cita";
 }
+
+<div class="container">
+    <h2>Solicitud de cita médica</h2>
+    <form method="post" class="rounded p-4 bg-light">
+        <div class="form-group">
+            <label for="asunto">Asunto</label>
+            <input type="text" class="form-control" id="asunto" name="asunto" required placeholder="Introduce el asunto de la cita">
+        </div>
+        <div class="form-group">
+            <label for="sintomas">Síntomas</label>
+            <textarea class="form-control" id="sintomas" name="sintomas" rows="5" required placeholder="Describe los síntomas"></textarea>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-success">Solicitar cita</button>
+        <hr />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+    </form>
+</div>
+
+
+

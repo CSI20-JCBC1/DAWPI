@@ -67,6 +67,10 @@ namespace DAWPI.Pages.Login
                     var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
                     await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
 
+                    if (usuario.Rol == 2)
+                    {
+                        return RedirectToPage("/Usuarios/Citas");
+                    }
                     
                 }
                 else
@@ -86,6 +90,8 @@ namespace DAWPI.Pages.Login
 
             // Si se llega a este punto, significa que el inicio de sesión fue exitoso
             return RedirectToPage("/Index"); // Se redirige al usuario a la página de inicio después de iniciar sesión
+
+            
         }
 
     }

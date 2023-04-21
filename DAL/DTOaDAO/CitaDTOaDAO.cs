@@ -23,11 +23,11 @@ namespace DAL.DTOaDAO
             cita.Sintomas = citaDTO.Sintomas;
             cita.NombreMedico = citaDTO.NombreMedico;
             cita.Hora = citaDTO.Hora;
-            cita.CodPlanta = citaDTO.MdUuid;
-            cita.CodSala = citaDTO.MdUuid;
-            cita.Enfermedad = citaDTO.MdUuid;
-            cita.Solucion = citaDTO.MdUuid;
-            cita.EstadoCita = citaDTO.MdUuid;
+            cita.CodPlanta = citaDTO.CodPlanta;
+            cita.CodSala = citaDTO.CodSala;
+            cita.Enfermedad = citaDTO.Enfermedad;
+            cita.Solucion = citaDTO.Solucion;
+            cita.EstadoCita = citaDTO.EstadoCita;
 
             return cita;
         }

@@ -23,9 +23,7 @@ namespace DAWPI.Pages.Usuarios
 
         public void OnGet()
         {
-            EmailUsuario = "jcbc20012004@gmail.com";
-
-            Console.WriteLine("Correo "+EmailUsuario);
+            EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
 
             try {
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
@@ -44,5 +42,11 @@ namespace DAWPI.Pages.Usuarios
             }
 
         }
+
+        public IActionResult OnPostCrear()
+        {
+            return RedirectToPage("/Usuarios/PedirCita");
+        }
+
     }
 }

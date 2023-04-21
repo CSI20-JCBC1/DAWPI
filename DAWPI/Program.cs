@@ -25,8 +25,8 @@ builder.Services.AddAuthentication("AuthScheme").AddCookie("AuthScheme", options
     options.Cookie.Name = "AuthScheme";
     //Donde se encuentra el login
     options.LoginPath = "/Login/Login";
-    //La cookie caduca en 3 minuto
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(3);
+    //La cookie caduca en 30 minutos
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     //Cuando el usuario tenga rol denegado
     options.AccessDeniedPath = "/Login/AccesoDenegado";
     //Al ejecutar el logout
