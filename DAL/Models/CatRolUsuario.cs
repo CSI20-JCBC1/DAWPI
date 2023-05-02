@@ -11,5 +11,5 @@ public partial class CatRolUsuario
 
     public long NivelAcceso { get; set; }
 
-    public virtual ICollection<Usuario> Usuarios { get; } = new List<Usuario>();
+    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }

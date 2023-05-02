@@ -37,7 +37,7 @@ namespace DAWPI.Pages.Usuarios
 
                     Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
 
-                    CitaDTO citaDTO = new CitaDTO(Asunto, usuario.NombreCompleto, Sintomas," ");
+                    CitaDTO citaDTO = new CitaDTO(Asunto, usuario.NombreCompleto, Sintomas);
 
                     Cita cita = CitaDTOaDAO.citaDTOaDAO(citaDTO);
 

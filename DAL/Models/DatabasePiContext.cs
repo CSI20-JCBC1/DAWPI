@@ -15,6 +15,8 @@ public partial class DatabasePiContext : DbContext
     {
     }
 
+    public virtual DbSet<CatEstadoCitum> CatEstadoCita { get; set; }
+
     public virtual DbSet<CatInfoMedico> CatInfoMedicos { get; set; }
 
     public virtual DbSet<CatPlantaCitum> CatPlantaCita { get; set; }
@@ -33,6 +35,23 @@ public partial class DatabasePiContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CatEstadoCitum>(entity =>
+        {
+            entity.HasKey(e => e.EstadoCita).HasName("cat_estado_cita_pkey");
+
+            entity.ToTable("cat_estado_cita", "dlk_controlacceso");
+
+            entity.Property(e => e.EstadoCita)
+                .HasColumnType("character varying")
+                .HasColumnName("estado_cita");
+            entity.Property(e => e.DescEstadoCita)
+                .HasColumnType("character varying")
+                .HasColumnName("desc_estado_cita");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+        });
+
         modelBuilder.Entity<CatInfoMedico>(entity =>
         {
             entity.HasKey(e => e.NombreMedico).HasName("cat_info_medico_pkey");
@@ -138,7 +157,7 @@ public partial class DatabasePiContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("nombre_paciente");
             entity.Property(e => e.Sintomas)
-                .HasMaxLength(255)
+                .HasMaxLength(1000)
                 .HasColumnName("sintomas");
             entity.Property(e => e.Solucion)
                 .HasMaxLength(255)

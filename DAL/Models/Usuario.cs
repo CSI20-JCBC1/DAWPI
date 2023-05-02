@@ -21,9 +21,9 @@ public partial class Usuario
 
     public long Rol { get; set; }
 
-    public virtual ICollection<Cita> CitaNombreMedicoNavigations { get; } = new List<Cita>();
+    public virtual ICollection<Cita> CitaNombreMedicoNavigations { get; set; } = new List<Cita>();
 
-    public virtual ICollection<Cita> CitaNombrePacienteNavigations { get; } = new List<Cita>();
+    public virtual ICollection<Cita> CitaNombrePacienteNavigations { get; set; } = new List<Cita>();
 
     public virtual CatRolUsuario RolNavigation { get; set; } = null!;
 }

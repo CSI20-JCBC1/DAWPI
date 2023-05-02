@@ -75,7 +75,7 @@ namespace DAL.DTO
             this.EstadoCita = estadoCita;
         }
 
-        public CitaDTO(string asunto, string nombrePaciente, string sintomas, string codPlanta)
+        public CitaDTO(string asunto, string nombrePaciente, string sintomas)
         {
             this.MdUuid = Guid.NewGuid().ToString();
             this.MdDate = DateTime.Now;
@@ -83,7 +83,7 @@ namespace DAL.DTO
             this.Asunto = asunto;
             this.NombrePaciente = nombrePaciente;
             this.Sintomas = sintomas;
-            this.CodPlanta = codPlanta;
+            this.EstadoCita = "PA";
         }
 
         public CitaDTO( )

@@ -11,5 +11,5 @@ public partial class CatInfoMedico
 
     public string? Especialidad { get; set; }
 
-    public virtual ICollection<Cita> Cita { get; } = new List<Cita>();
+    public virtual ICollection<Cita> Cita { get; set; } = new List<Cita>();
 }
