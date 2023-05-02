@@ -68,7 +68,7 @@ namespace DAWPI.Pages.Usuarios
         public IActionResult OnPostDetalles()
         {
 
-            return RedirectToPage("/Usuarios/DetallesCita/", new { detalle = detalle });
+            return RedirectToPage("./DetallesCita/", new { detalle = detalle });
 
         }
 

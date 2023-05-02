@@ -19,9 +19,9 @@ namespace DAWPI.Pages.Usuarios
 
         public CitaDTO Cita { get; set; }
 
-        public void OnGet(int id)
+        public void OnGet(int detalle)
         {
-            Cita cita = _db.Citas.FirstOrDefault(c => c.Id == id);
+            Cita cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
             CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
             Cita = citaDTO;
         }

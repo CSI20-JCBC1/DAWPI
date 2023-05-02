@@ -3,4 +3,49 @@
 @{
 }
 
-<h1>Hola</h1>
+<h1>Detalles de la cita</h1>
+
+<div>
+    <h4>Asunto:</h4>
+    <p>@Model.Cita.Asunto</p>
+</div>
+<div>
+    <h4>Nombre del paciente:</h4>
+    <p>@Model.Cita.NombrePaciente</p>
+</div>
+<div>
+    <h4>Síntomas:</h4>
+    <p>@Model.Cita.Sintomas</p>
+</div>
+@if (!Model.Cita.EstadoCita.Equals("PA"))
+{
+    <div>
+        <h4>Fecha:</h4>
+        <p>@Model.Cita.Fecha</p>
+    </div>
+    <div>
+        <h4>Hora:</h4>
+        <p>@Model.Cita.Hora</p>
+    </div>
+    <div>
+        <h4>Médico:</h4>
+        <p>@Model.Cita.NombreMedico</p>
+    </div>
+    <div>
+        <h4>Enfermedad:</h4>
+        <p>@Model.Cita.Enfermedad</p>
+    </div>
+    <div>
+        <h4>Solución:</h4>
+        <p>@Model.Cita.Solucion</p>
+    </div>
+}
+
+<div>
+    <h4>Estado de la cita:</h4>
+    <p>@Model.Cita.EstadoCita</p>
+</div>
+
+
+
+

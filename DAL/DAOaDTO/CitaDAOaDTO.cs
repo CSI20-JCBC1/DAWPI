@@ -14,6 +14,7 @@ namespace DAL.DAOaDTO
         {
 
            CitaDTO citaDTO = new CitaDTO();
+            citaDTO.Id = cita.Id;
             citaDTO.MdUuid = cita.MdUuid;
             citaDTO.MdDate = cita.MdDate;
             citaDTO.Id = cita.Id;
