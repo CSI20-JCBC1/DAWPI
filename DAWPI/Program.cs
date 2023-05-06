@@ -1,10 +1,9 @@
 using DAL.Models;
-using SendGrid;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<ISendGridClient>(x =>
-    new SendGridClient(builder.Configuration.GetSection("SendGrid:ApiKey").Value));
+
 
 
 // Registrar DatabasePiContext como servicio Scoped

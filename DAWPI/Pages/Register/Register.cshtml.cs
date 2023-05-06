@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 namespace DAWPI.Pages.Register
 {
     public class RegisterModel : PageModel
