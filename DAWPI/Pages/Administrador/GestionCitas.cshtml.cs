@@ -8,12 +8,16 @@ namespace DAWPI.Pages.Administrador
 {
     public class GestionCitasModel : PageModel
     {
+        [BindProperty]
+        public int detalle { get; set; }
+
         private readonly DatabasePiContext _db;
         public GestionCitasModel(DatabasePiContext db)
         {
             _db = db;
         }
 
+        public long usuId { get; set; }
         public List<CitaDTO> listaCitasDTO { get; set; }
         public void OnGet(int detalle)
         {
@@ -21,6 +25,8 @@ namespace DAWPI.Pages.Administrador
             {
 
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+
+                usuId = usuario.Id;
 
                 List<Cita> listaCitas = _db.Citas.ToList();
 
@@ -49,6 +55,13 @@ namespace DAWPI.Pages.Administrador
 
             }
 
+
+        }
+
+        public IActionResult OnPostNuevaCita()
+        {
+
+            return RedirectToPage("./NuevaCita/", new { detalle = detalle });
 
         }
     }
