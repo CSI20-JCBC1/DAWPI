@@ -1,11 +1,14 @@
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data;
 
 namespace DAWPI.Pages.Administrador
 {
+    [Authorize(Roles = "Admin")]
     public class GestionCitasModel : PageModel
     {
         [BindProperty]

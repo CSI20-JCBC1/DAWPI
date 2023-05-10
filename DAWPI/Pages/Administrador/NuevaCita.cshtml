@@ -1,4 +1,73 @@
 ﻿@page
 @model DAWPI.Pages.Administrador.NuevaCitaModel
 @{
+
 }
+
+@{
+    int cont = 0;
+}
+
+<style>
+    .title {
+        background-color: rgba(76, 175, 80, 0.9);
+        ;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 50px;
+        font-size: 36px;
+        color: #333;
+    }
+
+    .paragraph {
+        background-color: rgba(76, 175, 80, 0.9);
+        ;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        font-size: 18px;
+        color: #333;
+    }
+</style>
+
+<div>
+    <h1 class="title display-4" >@Model.nombre</h1>
+    <h3 class="paragraph" >@Model.especialidad</h3>
+</div>
+<br />
+
+<form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);" >
+    <div class="container">
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de citas</h2>
+        <table class="table" style="font-size: 16px;">
+            <thead>
+                <tr>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Cita</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Asunto</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cita in Model.listaCitasDTO)
+                {
+                    <tr>
+
+                        <td style="text-align: center; padding: 5px;">@{
+                                cont++; @cont
+                            }</td>
+                        <td style="text-align: center; padding: 5px;">@cita.Asunto</td>
+                        <td style="text-align: center; padding: 5px;">@cita.EstadoCita</td>
+                        <input type="hidden" name="IdUsuario" value="@Model.IdUsuario" />
+                        <td><button asp-page-handler="Asignar" class="btn btn-primary btn-sm" type="submit" name="idAsig" id="idAsig" value="@cita.Id">Asignar</button></td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button asp-page-handler="Crear" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Nueva Cita</button>
+    <br />
+    <br />
+</form>
+

@@ -2,3 +2,62 @@
 @model DAWPI.Pages.Administrador.CrearMedicoModel
 @{
 }
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div style="background-color: #4CAF50; padding: 50px; border-radius: 20px; box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);">
+    <form style="background-color: white; padding: 20px; border-radius: 10px; width: 400px; box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);">
+        <fieldset>
+            <legend>Register</legend>
+            <div>
+                <label for="nombre">Nombre y apellidos</label>
+                <input type="text" name="nombre" id="nombre" value="" placeholder="Nombre y apellidos" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            <div>
+                <label for="movil">Teléfono</label>
+                <input type="text" name="movil" id="movil" value="" placeholder="Teléfono" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            <div>
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            <div>
+                <label for="especialidad">Especialidad</label>
+                <input type="text" name="especialidad" id="especialidad" value="" placeholder="Especialidad" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            <div>
+                <label for="contrasenia">Clave de acceso</label>
+                <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Clave de acceso" maxlength="16" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            <div>
+                <label for="valContrasenia">Repetir clave</label>
+                <input type="password" name="contrasenia2" value="" id="contrasenia2" placeholder="Repetir clave" maxlength="16" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <br />
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+            <div>
+                <button type="submit" asp-page-handler="Submit" class="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; border-radius: 4px; cursor: pointer;">Registrar</button>
+
+            </div>
+            <hr />
+        </fieldset>
+    </form>
+</div>
+</div>

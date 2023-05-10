@@ -29,8 +29,8 @@
                         <td style="text-align: center; padding: 5px;">@usuario.NombreCompleto</td>
                         <td style="text-align: center; padding: 5px;">@usuario.Email</td>
                         <td style="text-align: center; padding: 5px;">@usuario.Movil</td>
-                        <td><button asp-page-handler="GestionCitas" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@usuario.Id">Gestionar Citas</button></td>
-
+                        <td><button asp-page-handler="GestionCitas" class="btn btn-primary" type="submit" name="detalle" id="detalle" value="@usuario.Id">Gestionar Citas</button></td>
+                        <td><button asp-page-handler="Borrar" class="btn btn-danger" type="submit" name="detalle" id="detalle" value="@usuario.Id">Borrar</button></td>
                     </tr>
                 }
             </tbody>

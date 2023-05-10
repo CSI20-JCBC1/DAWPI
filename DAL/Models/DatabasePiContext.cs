@@ -60,7 +60,7 @@ public partial class DatabasePiContext : DbContext
 
             entity.Property(e => e.NombreMedico)
                 .HasColumnType("character varying")
-                .HasColumnName("nombre_medico");
+                .HasColumnName("nombreMedico");
             entity.Property(e => e.Especialidad)
                 .HasColumnType("character varying")
                 .HasColumnName("especialidad");

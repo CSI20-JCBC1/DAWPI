@@ -56,5 +56,12 @@ namespace DAWPI.Pages.Administrador
 
         }
 
+        public IActionResult OnPostBorrar()
+        {
+
+            return RedirectToPage("./Borrar/", new { detalle = detalle });
+
+        }
+
     }
 }
