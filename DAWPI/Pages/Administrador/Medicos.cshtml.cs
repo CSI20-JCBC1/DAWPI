@@ -12,7 +12,7 @@ namespace DAWPI.Pages.Administrador
     public class MedicosModel : PageModel
     {
         [BindProperty]
-        public int detalle { get; set; }
+        public int detalle { get; set;}
 
         private readonly DatabasePiContext _db;
         public MedicosModel(DatabasePiContext db)
@@ -52,15 +52,16 @@ namespace DAWPI.Pages.Administrador
         public IActionResult OnPostGestionCitas()
         {
 
-            return RedirectToPage("./GestionCitas/", new { detalle = detalle });
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./GestionCitas");
 
         }
 
         public IActionResult OnPostBorrar()
         {
 
-            return RedirectToPage("./Borrar/", new { detalle = detalle });
-
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./Borrar");
         }
 
     }

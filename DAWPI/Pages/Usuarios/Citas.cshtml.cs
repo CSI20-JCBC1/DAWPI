@@ -68,7 +68,8 @@ namespace DAWPI.Pages.Usuarios
         public IActionResult OnPostDetalles()
         {
 
-            return RedirectToPage("./DetallesCita/", new { detalle = detalle });
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./DetallesCita");
 
         }
 

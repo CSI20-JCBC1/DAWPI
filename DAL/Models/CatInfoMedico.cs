@@ -9,7 +9,11 @@ public partial class CatInfoMedico
 
     public string NombreMedico { get; set; } = null!;
 
-    public string? Especialidad { get; set; }
+    public string Especialidad { get; set; } = null!;
+
+    public string CodSala { get; set; } = null!;
+
+    public string CodPlanta { get; set; } = null!;
 
     public virtual ICollection<Cita> Cita { get; set; } = new List<Cita>();
 }

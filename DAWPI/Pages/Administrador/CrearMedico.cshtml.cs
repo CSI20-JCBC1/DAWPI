@@ -19,17 +19,28 @@ namespace DAWPI.Pages.Administrador
         }
 
         [BindProperty]
-        public string nombre { get; set; }
+        public string Nombre { get; set; }
+
         [BindProperty]
-        public string email { get; set; }
+        public string Movil { get; set; }
+
         [BindProperty]
-        public string movil { get; set; }
+        public string Email { get; set; }
+
         [BindProperty]
-        public string especialidad { get; set; }
+        public string Especialidad { get; set; }
+
         [BindProperty]
-        public string contrasenia { get; set; }
+        public string CodPlanta { get; set; }
+
         [BindProperty]
-        public string contrasenia2 { get; set; }
+        public string CodSala { get; set; }
+
+        [BindProperty]
+        public string Contrasenia { get; set; }
+
+        [BindProperty]
+        public string Contrasenia2 { get; set; }
         public void OnGet()
         {
         }
@@ -39,20 +50,33 @@ namespace DAWPI.Pages.Administrador
             {
                 //Crear medico en el catálogo
 
-                Usuario usuario = UsuarioDTOaDAO.usuarioDTOaDAO(new UsuarioDTO(nombre, movil, email, contrasenia));
-                var usuarioBusqueda = _db.Usuarios.FirstOrDefault(e => e.Email == email);
+                Usuario usuario = UsuarioDTOaDAO.usuarioDTOaDAO(new UsuarioDTO(Nombre, Movil, Email, Contrasenia,1));
+                var usuarioBusqueda = _db.Usuarios.FirstOrDefault(e => e.Email == Email);
                 string email2 = usuarioBusqueda?.Email ?? string.Empty;
+                CatInfoMedico infoMedico = CatInfoMedicoDTOaDAO.catInfoMedicoDTOaDAO(new CatInfoMedicoDTO(Nombre, Especialidad, CodSala, CodPlanta));
+                List<CatInfoMedico> catInfoMedicos = _db.CatInfoMedicos.ToList();
+                bool salaExistente = false;
+
+                foreach (CatInfoMedico medico in catInfoMedicos)
+                {
+                    if (medico.CodPlanta == infoMedico.CodPlanta && medico.CodSala == infoMedico.CodSala)
+                    {
+                        salaExistente = true;
+                    }
+                }
+
+
                 // Validación de contraseñas
                 // Comprobamos si la contraseña y su validación coinciden
                 // En el formulario ya se controla el número máximo de caracteres
                 // Validamos también que la contraseña contenga al menos una mayúscula, una minúscula y un carácter especial
                 string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
-                if (contrasenia != contrasenia2)
+                if (Contrasenia != Contrasenia2)
                 {
                     ModelState.AddModelError(string.Empty, "Error, las contraseñas no coinciden"); // Se agrega un mensaje de error al modelo de estado
                     return Page();
                 }
-                else if (!Regex.IsMatch(contrasenia, pattern))
+                else if (!Regex.IsMatch(Contrasenia, pattern))
                 {
                     ModelState.AddModelError(string.Empty, "Error, la contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, una minúscula, y un carácter especial."); // Se agrega un mensaje de error al modelo de estado
                     return Page();
@@ -60,15 +84,25 @@ namespace DAWPI.Pages.Administrador
                 }
                 //Validamos que el email introducido no se encuentra en la base de datos, si se encuentra mandamos un menasje de error 
                 //a la página de registro
-                else if (email.Equals(email2))
+                else if (Email.Equals(email2))
                 {
                     ModelState.AddModelError(string.Empty, "El email que quiere registrar ya está en uso."); // Se agrega un mensaje de error al modelo de estado
+                    return Page();
+                }
+                //Validamos que la sala que se esta introduciendo es distinta a las demás del catalogo de infoMedicos, si es igual, mandamos un mensaje de 
+                //error a la página de registro
+                else if (salaExistente)
+                {
+                    ModelState.AddModelError(string.Empty, "La consulta que desea asignar ya está en uso, busque otra consulta para este médico."); // Se agrega un mensaje de error al modelo de estado
                     return Page();
                 }
                 //Una vez validamos lo anterior, insertamos el usuario en la base de datos.
                 else
                 {
-                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(contrasenia);
+                    _db.CatInfoMedicos.Add(infoMedico);
+                    _db.SaveChanges();
+
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(Contrasenia);
                     // Asignar la contraseña encriptada al objeto Usuario
                     usuario.Contrasenya = hashedPassword;
                     _db.Usuarios.Add(usuario);

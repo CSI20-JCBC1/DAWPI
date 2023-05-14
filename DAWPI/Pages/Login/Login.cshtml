@@ -3,48 +3,63 @@
 @{
     ViewData["Title"] = "Login";
 }
-<style>
-    /* Estilos para el formulario */
-    form {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        border: 1px solid #ccc;
-        padding: 32px;
-        border-radius: 4px;
-        max-width: 400px;
-        margin: 0 auto;
-        background-color: #f8f9fa;
-    }
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        /* Estilos para el formulario */
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 32px;
+            border-radius: 4px;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+        }
 
-    fieldset {
-        border: none;
-    }
+        fieldset {
+            border: none;
+        }
 
-    legend {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 16px;
-    }
+        legend {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
 
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
 
-    input[type="email"],
-    input[type="password"] {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 12px;
-        border: none;
-        border-bottom: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #f8f9fa;
-    }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
 
         input[type="email"]:focus,
         input[type="password"]:focus {
@@ -52,58 +67,128 @@
             border-color: #007bff;
         }
 
-    .submit {
-        padding: 12px 24px;
-        background-color: #007bff;
-        color: #fff;
-        font-weight: bold;
+        .submit {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .submit:hover {
+                background-color: #0056b3;
+            }
+
+        hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #ccc;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: red;
+            margin-top: 4px;
+        }
+
+        /* Estilos adicionales para página de login */
+        body {
+            background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
+        }
+
+        legend {
+            color: #007bff;
+        }
+
+        label {
+            color: #007bff;
+        }
+
+        .submit {
+            background-color: #007bff;
+        }
+
+            .submit:hover {
+                background-color: #0056b3;
+            }
+
+        .password-toggle-button {
+        background: transparent;
         border: none;
-        border-radius: 4px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        padding: 4px;
+        display: flex;
+        align-items: center;
     }
 
-        .submit:hover {
-            background-color: #0056b3;
-        }
+    .password-toggle-button:hover {
+        opacity: 0.8;
+    }
 
-    hr {
-        width: 100%;
+    .password-toggle-button:focus {
+        outline: none;
+    }
+
+    .password-toggle-button i {
+        color: #007bff;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+
+    .password-toggle-button:hover i {
+        color: #0056b3;
+    }.password-toggle-button {
+        background: transparent;
         border: none;
-        border-top: 1px solid #ccc;
-        margin-top: 24px;
-        margin-bottom: 16px;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
     }
 
-    p {
-        color: red;
-        margin-top: 4px;
+    .password-toggle-button:hover {
+        opacity: 0.8;
     }
 
-    /* Estilos adicionales para página de login */
-    body {
-        background-color: #f3f3f3;
-        font-family: Arial, sans-serif;
+    .password-toggle-button:focus {
+        outline: none;
     }
 
-    legend {
+    .password-toggle-button i {
         color: #007bff;
+        font-size: 18px;
+        transition: color 0.3s ease;
     }
 
-    label {
-        color: #007bff;
+    .password-toggle-button:hover i {
+        color: #0056b3;
     }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var togglePasswordButton = document.getElementById('togglePassword');
+            var passwordInput = document.getElementById('contrasenia');
+            var eyeIcon = document.getElementById('eyeIcon');
 
-    .submit {
-        background-color: #007bff;
-    }
-
-        .submit:hover {
-            background-color: #0056b3;
-        }
-
-</style>
-
+            togglePasswordButton.addEventListener('click', function () {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
+</head>
 <div>
     <form method="post">
         <fieldset>
@@ -116,6 +201,9 @@
             <div>
                 <label for="contrasenia">Contraseña</label>
                 <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Contraseña" required>
+                <button type="button" id="togglePassword" class="password-toggle-button">
+                    <i id="eyeIcon" class="fas fa-eye"></i>
+                </button>
             </div>
             <br />
             @if (!ViewData.ModelState.IsValid)

@@ -38,7 +38,7 @@ namespace DAL.DTO
             this.Movil = movil;
             this.Email = email;
             this.Contrasenya = contrasenya;
-            this.Rol = 3;
+            this.Rol = 2;
 
 
         }
@@ -51,7 +51,20 @@ namespace DAL.DTO
             this.Movil = movil;
             this.Email = email;
             this.Contrasenya = contrasenya;
-            this.Rol = 3;
+            this.Rol = 2;
+        }
+
+        public UsuarioDTO(string nombreCompleto, string movil, string email, string contrasenya,long rol)
+        {
+            this.MdUuid = Guid.NewGuid().ToString();
+            this.MdDate = DateTime.Now;
+            this.NombreCompleto = nombreCompleto;
+            this.Movil = movil;
+            this.Email = email;
+            this.Contrasenya = contrasenya;
+            this.Rol = rol;
+
+
         }
 
         public UsuarioDTO()

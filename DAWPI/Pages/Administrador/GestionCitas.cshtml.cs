@@ -22,30 +22,33 @@ namespace DAWPI.Pages.Administrador
 
         public long usuId { get; set; }
         public List<CitaDTO> listaCitasDTO { get; set; }
-        public void OnGet(int detalle)
+        public void OnGet(/*int detalle*/)
         {
             try
             {
-
-                Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
-
-                usuId = usuario.Id;
-
-                List<Cita> listaCitas = _db.Citas.ToList();
-
-                List<Cita> citasUsuarioSeleccionado = listaCitas.Where(c => c.NombreMedico == usuario.NombreCompleto).ToList();
-
-                listaCitasDTO = CitaDAOaDTO.listaCitaDAOaDTO(citasUsuarioSeleccionado);
-
-                List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
-
-                foreach (CitaDTO cita in listaCitasDTO)
+                int? detalle = HttpContext.Session.GetInt32("detalle");
+                if (detalle.HasValue)
                 {
-                    foreach (var estadoCita in listaEstadoCita)
+                    Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+
+                    usuId = usuario.Id;
+
+                    List<Cita> listaCitas = _db.Citas.ToList();
+
+                    List<Cita> citasUsuarioSeleccionado = listaCitas.Where(c => c.NombreMedico == usuario.NombreCompleto).ToList();
+
+                    listaCitasDTO = CitaDAOaDTO.listaCitaDAOaDTO(citasUsuarioSeleccionado);
+
+                    List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
+
+                    foreach (CitaDTO cita in listaCitasDTO)
                     {
-                        if (cita.EstadoCita == estadoCita.EstadoCita)
+                        foreach (var estadoCita in listaEstadoCita)
                         {
-                            cita.EstadoCita = estadoCita.DescEstadoCita;
+                            if (cita.EstadoCita == estadoCita.EstadoCita)
+                            {
+                                cita.EstadoCita = estadoCita.DescEstadoCita;
+                            }
                         }
                     }
                 }
@@ -64,7 +67,8 @@ namespace DAWPI.Pages.Administrador
         public IActionResult OnPostNuevaCita()
         {
 
-            return RedirectToPage("./NuevaCita/", new { detalle = detalle });
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./NuevaCita");
 
         }
     }

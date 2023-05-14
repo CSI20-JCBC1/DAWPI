@@ -19,11 +19,15 @@ namespace DAWPI.Pages.Usuarios
 
         public CitaDTO Cita { get; set; }
 
-        public void OnGet(int detalle)
+        public void OnGet()
         {
-            Cita cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
-            CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
-            Cita = citaDTO;
+            int? detalle = HttpContext.Session.GetInt32("detalle");
+            if (detalle.HasValue)
+            {
+                Cita cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
+                CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
+                Cita = citaDTO;
+            }
         }
     }
 }

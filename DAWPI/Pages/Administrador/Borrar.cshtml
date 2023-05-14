@@ -2,3 +2,32 @@
 @model DAWPI.Pages.Administrador.BorrarModel
 @{
 }
+
+<form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
+    <div class="container">
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Confirmar borrado</h2>
+        <p>Por favor, confirma que deseas borrar el siguiente usuario:</p>
+        <p><strong>Nombre Completo:</strong> @Model.usuarioDTO.NombreCompleto</p>
+        <p>Introduce el nombre completo del usuario para confirmar el borrado:</p>
+        <div class="form-group">
+            <input type="text" name="confirmacion" id="confirmacion" class="form-control" />
+        </div>
+        <br />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+        <br />
+        <button type="submit" class="btn btn-danger">Borrar usuario</button>
+    </div>
+</form>

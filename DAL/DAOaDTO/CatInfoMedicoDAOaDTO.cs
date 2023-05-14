@@ -14,9 +14,11 @@ namespace DAL.DAOaDTO
         {
             CatInfoMedicoDTO infoMedicoDTO = new CatInfoMedicoDTO();
 
-            infoMedico.Id = infoMedicoDTO.Id;
-            infoMedico.NombreMedico = infoMedicoDTO.NombreMedico;
-            infoMedico.Especialidad = infoMedicoDTO.Especialidad;
+            infoMedicoDTO.Id = infoMedico.Id;
+            infoMedicoDTO.NombreMedico = infoMedico.NombreMedico;
+            infoMedicoDTO.Especialidad = infoMedico.Especialidad;
+            infoMedicoDTO.CodSala = infoMedico.CodSala;
+            infoMedicoDTO.CodPlanta = infoMedico.CodPlanta;
 
             return infoMedicoDTO;
 

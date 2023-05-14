@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Register";
 }
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style>
     /* Estilos para el formulario */
     form {
@@ -102,8 +108,93 @@
             background-color: #0056b3;
         }
 
+    .password-toggle-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+        .password-toggle-button:hover {
+            opacity: 0.8;
+        }
+
+        .password-toggle-button:focus {
+            outline: none;
+        }
+
+        .password-toggle-button i {
+            color: #007bff;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle-button:hover i {
+            color: #0056b3;
+        }
+
+    .password-toggle-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+        .password-toggle-button:hover {
+            opacity: 0.8;
+        }
+
+        .password-toggle-button:focus {
+            outline: none;
+        }
+
+        .password-toggle-button i {
+            color: #007bff;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle-button:hover i {
+            color: #0056b3;
     
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var togglePasswordButton = document.getElementById('togglePassword');
+        var passwordInput = document.getElementById('contrasenia');
+        var eyeIcon = document.getElementById('eyeIcon');
+
+        togglePasswordButton.addEventListener('click', function () {
+            togglePasswordVisibility(passwordInput, eyeIcon);
+        });
+
+        var togglePasswordButton2 = document.getElementById('togglePassword2');
+        var passwordInput2 = document.getElementById('contrasenia2');
+        var eyeIcon2 = document.getElementById('eyeIcon2');
+
+        togglePasswordButton2.addEventListener('click', function () {
+            togglePasswordVisibility(passwordInput2, eyeIcon2);
+        });
+    });
+
+    function togglePasswordVisibility(passwordInput, eyeIcon) {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+</script>
+</head>
 
 <div>
     <form method="post">
@@ -127,12 +218,19 @@
             <div>
                 <label for="contrasenia">Clave de acceso</label>
                 <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Clave de acceso" maxlength="16" required>
+                <button type="button" id="togglePassword" class="password-toggle-button">
+                    <i id="eyeIcon" class="fas fa-eye"></i>
+                </button>
             </div>
             <br />
             <div>
                 <label for="valContrasenia">Repetir clave</label>
                 <input type="password" name="contrasenia2" value="" id="contrasenia2" placeholder="Repetir clave" maxlength="16" required>
+                <button type="button" id="togglePassword2" class="password-toggle-button">
+                    <i id="eyeIcon2" class="fas fa-eye"></i>
+                </button>
             </div>
+
             <br />
             @if (!ViewData.ModelState.IsValid)
             {
