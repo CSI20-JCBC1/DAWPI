@@ -75,7 +75,10 @@ namespace DAWPI.Pages.Login
                     {
                         return RedirectToPage("/Administrador/Acciones");
                     }
-                    
+                    else if (usuario.Rol == 1)
+                    {
+                        return RedirectToPage("/Medicos/Citas");
+                    }
                 }
                 else
                 {

@@ -3,6 +3,8 @@ using DAL.DTOaDAO;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MailKit.Net.Smtp;
+using MimeKit;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -68,6 +70,26 @@ namespace DAWPI.Pages.Register
                     _db.Usuarios.Add(usuario);
                     _db.SaveChanges();
 
+                    //// Envío de correo de verificación
+                    //var message = new MimeMessage();
+                    //message.From.Add(new MailboxAddress("Clínica Juan Carlos Bada", "jccloud0128@gmail.com")); // Remitente
+                    //message.To.Add(new MailboxAddress(usuario.NombreCompleto, email)); // Destinatario
+                    //message.Subject = "Verificación de correo electrónico";
+
+                    //// Cuerpo del mensaje
+                    //message.Body = new TextPart("plain")
+                    //{
+                    //    Text = "¡Gracias por registrarte! Por favor, verifica tu dirección de correo electrónico haciendo clic en el siguiente enlace: https://www.tuweb.com/verificar?codigo=123456"
+                    //};
+
+                    //// Configuración del cliente SMTP
+                    //using (var client = new SmtpClient())
+                    //{
+                    //    await client.ConnectAsync("ajcbadcar@iesmurillo.es", 587, false);
+                    //    await client.AuthenticateAsync("jccloud0128@gmail.com", "Juancarbc2001#@");
+                    //    await client.SendAsync(message);
+                    //    await client.DisconnectAsync(true);
+                    //}
 
                 }
             }

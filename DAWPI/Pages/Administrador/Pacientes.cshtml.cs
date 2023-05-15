@@ -42,11 +42,11 @@ namespace DAWPI.Pages.Administrador
             }
 
         }
-        public IActionResult OnPostDetalles()
+        public IActionResult OnPostBorrar()
         {
 
-            return RedirectToPage("./DetallesPaciente/", new { detalle = detalle });
-
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./Borrar");
         }
     }
 }

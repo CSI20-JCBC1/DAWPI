@@ -1,39 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.DTOaDAO;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
 
 namespace DAWPI.Pages.Administrador
 {
     public class BorrarModel : PageModel
     {
-
         private readonly DatabasePiContext _db;
         public BorrarModel(DatabasePiContext db)
         {
             _db = db;
         }
+
         public UsuarioDTO usuarioDTO { get; set; }
-        public int ? detalle { get; set; }
+        public int? detalle { get; set; }
+
         public void OnGet()
         {
             try
             {
-
+                HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
                 if (detalle.HasValue)
                 {
-
-                    Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
-
-                    usuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
+                    Usuario? usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+                    if (usuario == null)
+                    {
+                        Response.Redirect("/Administrador/Medicos");
+                    }
+                    else
+                    {
+                        usuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
+                    }
                 }
-
-
-
-
             }
             catch (Exception ex)
             {
@@ -41,70 +47,91 @@ namespace DAWPI.Pages.Administrador
             }
         }
 
+
         public IActionResult OnPost(string confirmacion)
         {
-
-            try {
+            try
+            {
+                HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
+                Console.WriteLine(detalle);
                 if (detalle.HasValue)
                 {
-
                     Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
-
                     usuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
                 }
+
                 bool citaPendiente = false;
-                Console.WriteLine(usuarioDTO.NombreCompleto);
+
                 if (!string.IsNullOrEmpty(confirmacion) && confirmacion.Trim() == usuarioDTO.NombreCompleto)
                 {
-                    // Eliminar el usuario
-                    int? detalle = HttpContext.Session.GetInt32("detalle");
-                    if (detalle.HasValue)
+                    // Check if the user is a doctor and has pending appointments
+                    if (usuarioDTO.Rol == 1)
                     {
-                        Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
-                        if (usuario != null)
+                        List<Cita> listaCitas = _db.Citas.ToList();
+
+                        foreach (Cita cita in listaCitas)
                         {
-                            if (usuario.Rol == 1)
+                            if (cita.NombreMedico == usuarioDTO.NombreCompleto && (cita.EstadoCita.Equals("PFH") || cita.EstadoCita.Equals("A")))
                             {
-                                List<Cita> listaCitas = _db.Citas.ToList();
-                                if (listaCitas.Count > 0)
-                                    foreach (Cita cita in listaCitas)
-                                    {
-                                        if (cita.NombreMedico.Equals(usuario.NombreCompleto) && (cita.EstadoCita.Equals("PFH") || cita.EstadoCita.Equals("A")))
-                                        {
-                                            citaPendiente = true;
-                                            break;
-                                        }
-                                    }
-
-                                if (citaPendiente)
-                                {
-                                    ModelState.AddModelError(string.Empty, "Error, el médico que esta intentando borrar tiene citas pendientes, contacte con el para que quite su asignación y se lo comente al usuario"); // Se agrega un mensaje de error al modelo de estado
-                                    return Page();
-                                }
-                                else
-                                {
-                                    _db.Remove(usuario);
-                                    _db.SaveChanges();
-                                }
-
+                                citaPendiente = true;
+                                break;
                             }
                         }
+
+                        if (citaPendiente)
+                        {
+                            ModelState.AddModelError(string.Empty, "Error, el médico que está intentando borrar tiene citas pendientes. Por favor, contacte con él para que elimine sus asignaciones antes de continuar.");
+                            return Page();
+                        }
+
+                        Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+                        CatInfoMedico infomedico = _db.CatInfoMedicos.FirstOrDefault(i => i.NombreMedico == usuario.NombreCompleto);
+                        if (usuario != null)
+                        {
+                            _db.Remove(infomedico);
+                            _db.SaveChanges();
+                            _db.Remove(usuario);
+                            _db.SaveChanges();
+
+                        }
                     }
-                    
+                    else if (usuarioDTO.Rol == 2)
+                    {
+                        List<Cita> listaCitas = _db.Citas.ToList();
+                        Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+
+                        foreach (Cita cita in listaCitas)
+                        {
+                            if (cita.NombrePaciente == usuario.NombreCompleto)
+                            {
+                                _db.Remove(cita);
+                            }
+                        }
+
+                        _db.SaveChanges();
+                        _db.Remove(usuario);
+                        _db.SaveChanges();
+
+                    }
+
+
+
+
+
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "El nombre completo no coincide. Inténtalo de nuevo.");
                     return Page();
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            return RedirectToPage("/Administrador/Medicos");
+            return RedirectToPage("/Administrador/Acciones");
         }
-
     }
 }
