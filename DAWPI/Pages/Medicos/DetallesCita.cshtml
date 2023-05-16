@@ -88,17 +88,19 @@
                     <td>@Model.Cita.CodSala</td>
                 </tr>
                 <tr>
-                    <th>Hora:</th>
-                    <td><input type="time" name="hora" value="@Model.Cita.Hora?.ToString("HH:mm")" /></td>
+                    <th>Fecha:</th>
+                    <td><input type="date" name="fecha" id="fecha"></td>
                 </tr>
                 <tr>
-                    <th>Fecha:</th>
-                    <td><input type="date" name="fecha" value="@Model.Cita.Fecha?.ToString("yyyy-MM-dd")" /></td>
+                    <th>Hora:</th>
+                    <td><input type="time" name="hora" id="hora"/></td>
                 </tr>
+                
             </table>
 
             <div class="details-buttons">
-                <button type="submit">Guardar Cambios</button>
+                <button asp-page-handler="Asignar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
+
             </div>
         </form>
     }
