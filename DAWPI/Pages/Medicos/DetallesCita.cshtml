@@ -89,18 +89,98 @@
                 </tr>
                 <tr>
                     <th>Fecha:</th>
-                    <td><input type="date" name="fecha" id="fecha"></td>
+                    <td><input type="date" name="fecha" id="fecha" required /></td>
                 </tr>
                 <tr>
                     <th>Hora:</th>
-                    <td><input type="time" name="hora" id="hora"/></td>
+                    <td><input type="time" name="hora" id="hora" required /></td>
                 </tr>
-                
             </table>
+            <br />
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
 
             <div class="details-buttons">
                 <button asp-page-handler="Asignar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
+            </div>
+        </form>
+    }
+    else if (Model.Cita.EstadoCita == "A")
+    {
+        <form method="post">
+            <table class="details-table">
+                <tr>
+                    <th>Asunto:</th>
+                    <td>@Model.Cita.Asunto</td>
+                </tr>
+                <tr>
+                    <th>Nombre del Paciente:</th>
+                    <td>@Model.Cita.NombrePaciente</td>
+                </tr>
+                <tr>
+                    <th>Síntomas:</th>
+                    <td>@Model.Cita.Sintomas</td>
+                </tr>
+                <tr>
+                    <th>Planta:</th>
+                    <td>@Model.Cita.CodPlanta</td>
+                </tr>
+                <tr>
+                    <th>Sala:</th>
+                    <td>@Model.Cita.CodSala</td>
+                </tr>
+                <tr>
+                    <th>Fecha:</th>
+                    <td>@Model.Cita.Fecha</td>
+                </tr>
+                <tr>
+                    <th>Hora:</th>
+                    <td>@Model.Cita.Hora</td>
+                </tr>
+                <tr>
+                    <th>Enfermedad:</th>
+                    <td><input type="text" name="enfermedad" id="enfermedad" required /></td>
+                </tr>
+                <tr>
+                    <th>Solución:</th>
+                    <td colspan="2">
+                        <textarea name="solucion" id="solucion" required style="width: 100%; height: auto;"></textarea>
+                    </td>
+                </tr>
 
+            </table>
+            <br />
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="details-buttons">
+                <button asp-page-handler="Diagnosticar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
             </div>
         </form>
     }
