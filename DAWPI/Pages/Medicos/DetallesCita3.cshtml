@@ -1,0 +1,79 @@
+﻿@page
+@model DAWPI.Pages.Medicos.DetallesCita3Model
+@{
+}
+
+
+<style>
+
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h4 {
+        margin-top: 30px;
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+</style>
+
+<div style="margin: auto;
+        max-width: 800px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
+
+    <h1>Detalles de la cita</h1>
+
+    <div>
+        <h4>Asunto:</h4>
+        <p>@Model.Cita.Asunto</p>
+    </div>
+
+    <div>
+        <h4>Nombre del paciente:</h4>
+        <p>@Model.Cita.NombrePaciente</p>
+    </div>
+
+    <div>
+        <h4>Síntomas:</h4>
+        <p>@Model.Cita.Sintomas</p>
+    </div>
+
+
+    <div>
+        <h4>Fecha:</h4>
+        <p>@Model.Cita.Fecha</p>
+    </div>
+
+    <div>
+        <h4>Hora:</h4>
+        <p>@Model.Cita.Hora</p>
+    </div>
+
+    <div>
+        <h4>Médico:</h4>
+        <p>@Model.Cita.NombreMedico</p>
+    </div>
+
+    <div>
+        <h4>Enfermedad:</h4>
+        <p>@Model.Cita.Enfermedad</p>
+    </div>
+
+    <div>
+        <h4>Solución:</h4>
+        <p>@Model.Cita.Solucion</p>
+    </div>
+
+
+    <div>
+        <h4>Estado de la cita:</h4>
+        <p>@Model.Cita.EstadoCita</p>
+    </div>
+</div>

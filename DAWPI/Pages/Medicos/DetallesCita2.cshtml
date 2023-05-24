@@ -1,9 +1,7 @@
 ﻿@page
-@model DAWPI.Pages.Medicos.DetallesCitaModel
+@model DAWPI.Pages.Medicos.DetallesCita2Model
 @{
-    ViewData["Title"] = "Detalles de la Cita";
 }
-
 <style>
     .details-container {
         max-width: 600px;
@@ -62,7 +60,6 @@
 
 <div class="details-container">
     <h1>Detalles de la Cita</h1>
-
     <form method="post">
         <table class="details-table">
             <tr>
@@ -87,12 +84,23 @@
             </tr>
             <tr>
                 <th>Fecha:</th>
-                <td><input type="date" name="fecha" id="fecha" required /></td>
+                <td>@Model.Cita.Fecha</td>
             </tr>
             <tr>
                 <th>Hora:</th>
-                <td><input type="time" name="hora" id="hora" required /></td>
+                <td>@Model.Cita.Hora</td>
             </tr>
+            <tr>
+                <th>Enfermedad:</th>
+                <td><input type="text" name="enfermedad" id="enfermedad" required /></td>
+            </tr>
+            <tr>
+                <th>Solución:</th>
+                <td colspan="2">
+                    <textarea name="solucion" id="solucion" required style="width: 100%; height: auto;"></textarea>
+                </td>
+            </tr>
+
         </table>
         <br />
 
@@ -112,9 +120,7 @@
         }
 
         <div class="details-buttons">
-            <button asp-page-handler="Asignar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
+            <button asp-page-handler="Diagnosticar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
         </div>
     </form>
-
-
 </div>

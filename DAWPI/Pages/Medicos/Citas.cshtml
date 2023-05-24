@@ -4,39 +4,106 @@
     ViewData["Title"] = "Citas";
 }
 
-
 @{
     int cont = 0;
 }
 
 <form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
     <div class="container">
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de citas</h2>
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Mis citas</h2>
+
+        <div style="margin-bottom: 10px;">
+            <label for="estadoCita" style="font-weight: bold;">Filtrar por estado de la cita:</label>
+            <select class="form-control" id="estadoCita" name="estadoCita" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; appearance: none; background-color: #f5f5f5;">
+                <option value="">Todos</option>
+                <option value="Pendiente de fecha y hora">Pendiente de fecha y hora</option>
+                <option value="Asignada">Asignada</option>
+                <option value="Finalizada">Finalizada</option>
+            </select>
+
+        </div>
+
+        <label for="filtroNombre" style="font-weight: bold;">Filtrar por nombre del paciente:</label>
+        <br />
+        <input type="text" class="form-control" id="filtroNombre" name="filtroNombre" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Nombre Paciente">
+
+
+
         <table class="table" style="font-size: 16px;">
             <thead>
                 <tr>
                     <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Cita</th>
                     <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Asunto</th>
                     <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Estado</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nombre del paciente</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Fecha</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Hora</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Planta</th>
+                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Consulta</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var cita in Model.listaCitasDTO)
                 {
                     <tr>
-
-                        <td style="text-align: center; padding: 5px;">@{ cont++; @cont }</td>
+                        <td style="text-align: center; padding: 5px;">
+                            @{
+                                cont++;
+                                @cont
+                            }
+                        </td>
                         <td style="text-align: center; padding: 5px;">@cita.Asunto</td>
                         <td style="text-align: center; padding: 5px;">@cita.EstadoCita</td>
-                        <td><button asp-page-handler="Detalles" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@cita.Id">Detalles</button></td>
-                     
+                        <td style="text-align: center; padding: 5px;">@cita.NombrePaciente</td>
+                        <td style="text-align: center; padding: 5px;">@cita.Fecha</td>
+                        <td style="text-align: center; padding: 5px;">@cita.Hora</td>
+                        <td style="text-align: center; padding: 5px;">@cita.CodPlanta</td>
+                        <td style="text-align: center; padding: 5px;">@cita.CodSala</td>
+                        @if (cita.EstadoCita.Equals("Pendiente de fecha y hora"))
+                        {
+                            <td><button asp-page-handler="Detalles" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@cita.Id">Asignar fecha y hora</button></td>
+                        }
+                        else if (cita.EstadoCita.Equals("Asignada"))
+                        {
+                            <td><button asp-page-handler="Detalles2" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@cita.Id">Diagnosticar</button></td>
+                        }
+                        else if (cita.EstadoCita.Equals("Finalizada"))
+                        {
+                            <td><button asp-page-handler="Detalles3" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@cita.Id">Detalles</button></td>
+                        }
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 
-
     <br />
 </form>
+
+
+<script>
+    document.getElementById("estadoCita").addEventListener("change", function () {
+        filtrarCitas();
+    });
+
+    document.getElementById("filtroNombre").addEventListener("input", function () {
+        filtrarCitas();
+    });
+
+    function filtrarCitas() {
+        var estadoSeleccionado = document.getElementById("estadoCita").value.toLowerCase();
+        var filtroNombre = document.getElementById("filtroNombre").value.toLowerCase();
+
+        var filas = document.getElementsByTagName("tr");
+        for (var i = 1; i < filas.length; i++) {
+            var estadoCita = filas[i].getElementsByTagName("td")[2].innerText.toLowerCase();
+            var nombrePaciente = filas[i].getElementsByTagName("td")[3].innerText.toLowerCase();
+
+            var mostrarFila = (estadoSeleccionado === "" || estadoCita === estadoSeleccionado) &&
+                (filtroNombre === "" || nombrePaciente.includes(filtroNombre));
+
+            filas[i].style.display = mostrarFila ? "" : "none";
+        }
+    }
+</script>
 

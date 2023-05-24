@@ -27,20 +27,10 @@ namespace DAWPI.Pages.Medicos
         public CitaDTO Cita { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage = "El campo Fecha es obligatorio.")]
         public string Fecha { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage = "El campo Hora es obligatorio.")]
         public string Hora { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "El campo Fecha es obligatorio.")]
-        public string Enfermedad { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "El campo Hora es obligatorio.")]
-        public string Solucion { get; set; }
 
 
         public int? Detalle { get; set; }
@@ -56,6 +46,7 @@ namespace DAWPI.Pages.Medicos
                 Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
                 CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                 Cita = citaDTO;
+
             }
         }
 
@@ -66,8 +57,6 @@ namespace DAWPI.Pages.Medicos
                 return Page();
             }
 
-            // Desactiva el caché para la página
-            HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
             Detalle = HttpContext.Session.GetInt32("detalle");
 
             string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
@@ -105,7 +94,10 @@ namespace DAWPI.Pages.Medicos
                         }
                     }
 
-                    if (!horaInvalida)
+                    DateTime fechaActual = DateTime.Today;
+                    DateOnly fechaHoy = new DateOnly(fechaActual.Year, fechaActual.Month, fechaActual.Day);
+
+                    if (!horaInvalida && !(fechaCita <= fechaHoy))
                     {
                         // Actualiza la cita con la nueva fecha, hora y estado
                         cita.Fecha = fechaCita;
@@ -115,7 +107,7 @@ namespace DAWPI.Pages.Medicos
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "La hora de la cita seleccionada no está disponible. Por favor, elige otra hora."); // Agrega un mensaje de error al modelo de estado
+                        ModelState.AddModelError(string.Empty, "La fecha introducida o la hora no están disponibles, intente insertar una fecha válida o que el horario de citas en el mismo día no coincidan"); // Agrega un mensaje de error al modelo de estado
                         return Page();
                     }
                 }
@@ -125,34 +117,7 @@ namespace DAWPI.Pages.Medicos
             return RedirectToPage("/Medicos/Citas");
         }
 
-        public IActionResult OnPostDiagnosticar()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
 
-            // Desactiva el caché para la página
-            HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-            Detalle = HttpContext.Session.GetInt32("detalle");
-
-            string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
-            if (Detalle.HasValue)
-            {
-                Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
-                CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
-                Cita = citaDTO;
-                if (cita != null)
-                {
-                    cita.Enfermedad = Enfermedad;
-                    cita.Solucion = Solucion;
-                    _db.SaveChanges();
-                }
-            }
-
-            // Redirecciona a la página de citas
-            return RedirectToPage("/Medicos/Citas");
-        }
     }
 
 }

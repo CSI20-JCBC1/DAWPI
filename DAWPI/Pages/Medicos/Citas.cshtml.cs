@@ -68,5 +68,22 @@ namespace DAWPI.Pages.Medicos
 
         }
 
+        public IActionResult OnPostDetalles2()
+        {
+
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./DetallesCita2");
+
+        }
+
+        public IActionResult OnPostDetalles3()
+        {
+
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./DetallesCita3");
+
+        }
+
+
     }
 }
