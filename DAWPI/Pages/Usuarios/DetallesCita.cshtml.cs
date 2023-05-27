@@ -27,6 +27,15 @@ namespace DAWPI.Pages.Usuarios
                 Cita cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                 CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                 Cita = citaDTO;
+
+                List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
+                foreach (var estadoCita in listaEstadoCita)
+                {
+                    if (Cita.EstadoCita == estadoCita.EstadoCita)
+                    {
+                        Cita.EstadoCita = estadoCita.DescEstadoCita;
+                    }
+                }
             }
         }
     }

@@ -46,32 +46,42 @@
         <p>@Model.Cita.Sintomas</p>
     </div>
 
-    @if (!Model.Cita.EstadoCita.Equals("PA"))
+    @if (!Model.Cita.EstadoCita.Equals("Pendiente de asignación"))
     {
-        <div>
-            <h4>Fecha:</h4>
-            <p>@Model.Cita.Fecha</p>
-        </div>
-
-        <div>
-            <h4>Hora:</h4>
-            <p>@Model.Cita.Hora</p>
-        </div>
-
+        
         <div>
             <h4>Médico:</h4>
             <p>@Model.Cita.NombreMedico</p>
         </div>
 
-        <div>
-            <h4>Enfermedad:</h4>
-            <p>@Model.Cita.Enfermedad</p>
-        </div>
+        @if (Model.Cita.EstadoCita.Equals("Finalizada") || Model.Cita.EstadoCita.Equals("Asignada"))
+        {
+            <div>
+                <h4>Fecha:</h4>
+                <p>@Model.Cita.Fecha</p>
+            </div>
 
-        <div>
-            <h4>Solución:</h4>
-            <p>@Model.Cita.Solucion</p>
+            <div>
+                <h4>Hora:</h4>
+            <p>@Model.Cita.Hora</p>
         </div>
+        }
+
+        @if (Model.Cita.EstadoCita.Equals("Finalizada"))
+        {
+
+            <div>
+                <h4>Enfermedad:</h4>
+                <p>@Model.Cita.Enfermedad</p>
+            </div>
+
+            <div>
+                <h4>Solución:</h4>
+                <p>@Model.Cita.Solucion</p>
+            </div>
+            
+        }
+
     }
 
     <div>
