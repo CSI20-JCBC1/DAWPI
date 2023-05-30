@@ -45,24 +45,25 @@
                     <i id="eyeIcon" class="fas fa-eye" style="color: #007bff; font-size: 18px; transition: color 0.3s ease;"></i>
                 </button>
             </div>
+            <hr />
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 8px 12px; border-radius: 4px; margin-top: 16px; text-align: left;">
+                    <ul style="margin: 0;">
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
             <button type="submit" style="padding: 12px 24px; background-color: #007bff; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease;">Verificar</button>
         </form>
     </div>
-    <hr />
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 8px 12px; border-radius: 4px; margin-top: 16px; text-align: left;">
-            <ul style="margin: 0;">
-                @foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                }
-            </ul>
-        </div>
-    }
+    
 </body>
 
 </html>
