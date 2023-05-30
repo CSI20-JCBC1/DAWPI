@@ -36,6 +36,26 @@ namespace DAWPI.Pages.Usuarios
                         Cita.EstadoCita = estadoCita.DescEstadoCita;
                     }
                 }
+
+                List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+                foreach (var sala in listaSalaCita)
+                {
+                    if (Cita.CodSala == sala.CodSala)
+                    {
+                        Cita.CodSala = sala.NombreSala;
+                    }
+                }
+
+                List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+                foreach (var planta in listaPlantaCita)
+                {
+                    if (Cita.CodPlanta == planta.CodPlanta)
+                    {
+                        Cita.CodPlanta = planta.NombrePlanta;
+                    }
+                }
+
+
             }
         }
     }

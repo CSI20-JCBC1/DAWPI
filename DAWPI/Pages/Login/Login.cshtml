@@ -221,6 +221,13 @@
                 </div>
             }
             <div>
+                @if (!string.IsNullOrEmpty(Model.MensajeExito))
+                {
+                    <div class="alert alert-success">@Model.MensajeExito</div>
+                }
+
+            </div>
+            <div>
                 <button type="submit" asp-page-handler="Submit" class="submit">Iniciar sesión</button>
             </div>
             <hr />
@@ -229,3 +236,5 @@
         </fieldset>
     </form>
 </div>
+
+

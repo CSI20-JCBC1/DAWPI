@@ -218,6 +218,7 @@ public partial class DatabasePiContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("movil");
             entity.Property(e => e.Rol).HasColumnName("rol");
+            entity.Property(e => e.Verificado).HasColumnName("verificado");
 
             entity.HasOne(d => d.RolNavigation).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.Rol)

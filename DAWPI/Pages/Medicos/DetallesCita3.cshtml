@@ -3,7 +3,6 @@
 @{
 }
 
-
 <style>
 
 
@@ -21,6 +20,18 @@
     }
 </style>
 
+@if (Model.Cita == null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        <h4>Aún no ha seleccionado ninguna cita, o esta no existe.</h4>
+        <p>
+            Por favor, asegurese de que la cita existe, vuelva atrás para seleccionar una cita.
+        </p>
+
+    </div>
+}
+else
+{
 <div style="margin: auto;
         max-width: 800px;
         padding: 10px;
@@ -77,3 +88,4 @@
         <p>@Model.Cita.EstadoCita</p>
     </div>
 </div>
+}

@@ -57,7 +57,18 @@
                 background-color: #45a049;
             }
 </style>
+@if (Model.Cita == null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        <h4>Aún no ha seleccionado ninguna cita, o esta no existe.</h4>
+        <p>
+            Por favor, asegurese de que la cita existe, vuelva atrás para seleccionar una cita.
+        </p>
 
+    </div>
+}
+else
+{
 <div class="details-container">
     <h1>Detalles de la Cita</h1>
     <form method="post">
@@ -124,3 +135,4 @@
         </div>
     </form>
 </div>
+}

@@ -22,6 +22,7 @@ namespace DAL.DTOaDAO
             usuario.Email=usuarioDTO.Email;
             usuario.Contrasenya=usuarioDTO.Contrasenya;
             usuario.Rol=usuarioDTO.Rol;
+            usuario.Verificado=usuarioDTO.Verificado;
 
             return usuario;
         }

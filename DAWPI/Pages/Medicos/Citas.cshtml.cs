@@ -22,6 +22,8 @@ namespace DAWPI.Pages.Medicos
         }
 
         public List<CitaDTO> listaCitasDTO { get; set; }
+
+        public List<CatEstadoCitaDTO> listaEstadoDTO { get; set; }
         public void OnGet()
         {
             EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
@@ -38,7 +40,6 @@ namespace DAWPI.Pages.Medicos
                 listaCitasDTO = CitaDAOaDTO.listaCitaDAOaDTO(citasUsuarioSeleccionado);
 
                 List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
-
                 foreach (CitaDTO cita in listaCitasDTO)
                 {
                     foreach (var estadoCita in listaEstadoCita)
@@ -49,6 +50,33 @@ namespace DAWPI.Pages.Medicos
                         }
                     }
                 }
+
+                List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+                foreach (CitaDTO cita in listaCitasDTO)
+                {
+                    foreach (var sala in listaSalaCita)
+                    {
+                        if (cita.CodSala == sala.CodSala)
+                        {
+                            cita.CodSala = sala.NombreSala;
+                        }
+                    }
+                }
+
+                List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+                foreach (CitaDTO cita in listaCitasDTO)
+                {
+                    foreach (var planta in listaPlantaCita)
+                    {
+                        if (cita.CodPlanta == planta.CodPlanta)
+                        {
+                            cita.CodPlanta = planta.NombrePlanta;
+                        }
+                    }
+                }
+
+                List<CatEstadoCitum> listaEstados = _db.CatEstadoCita.ToList();
+                listaEstadoDTO = CatEstadoCitaDAOaDTO.listaCatEstadoCitaDAOaDTO(listaEstados);
 
             }
             catch (Exception e)

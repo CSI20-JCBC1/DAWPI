@@ -1,0 +1,68 @@
+﻿@page
+@model DAWPI.Pages.Register.VerificacionModel
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verificación de Identidad</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var togglePasswordButton = document.getElementById('togglePassword');
+            var passwordInput = document.getElementById('contrasenia');
+            var eyeIcon = document.getElementById('eyeIcon');
+
+            togglePasswordButton.addEventListener('click', function () {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
+</head>
+<body style="background-color: #f3f3f3; font-family: Arial, sans-serif;">
+    <div style="text-align: center; padding: 20px; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); max-width: 400px; margin: 0 auto;">
+        <h1 style="color: #333; margin-bottom: 20px;">Verificación de Identidad</h1>
+        <p style="margin-bottom: 30px;">Por favor, introduce tu nombre completo y tu contraseña, y haz clic en el botón de abajo para verificar tu identidad.</p>
+
+        <form method="post" asp-page-handler="Verificar" style="display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;">
+            <div>
+                <label for="contrasenia" style="display: block; font-weight: bold; margin-bottom: 4px; color: #007bff;">Nombre</label>
+                <input type="text" name="nombreCompleto" placeholder="Nombre completo" style="padding: 12px; margin-bottom: 12px; border: none; border-bottom: 1px solid #ccc; border-radius: 4px; background-color: #f8f9fa; width: 100%;" required />
+            </div>
+            <div>
+                <label for="contrasenia" style="display: block; font-weight: bold; margin-bottom: 4px; color: #007bff;">Contraseña</label>
+                <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Contraseña" style="padding: 12px; margin-bottom: 12px; border: none; border-bottom: 1px solid #ccc; border-radius: 4px; background-color: #f8f9fa; width: 100%;" required>
+                <button type="button" id="togglePassword" class="password-toggle-button" style="background: transparent; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center;">
+                    <i id="eyeIcon" class="fas fa-eye" style="color: #007bff; font-size: 18px; transition: color 0.3s ease;"></i>
+                </button>
+            </div>
+            <button type="submit" style="padding: 12px 24px; background-color: #007bff; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease;">Verificar</button>
+        </form>
+    </div>
+    <hr />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 8px 12px; border-radius: 4px; margin-top: 16px; text-align: left;">
+            <ul style="margin: 0;">
+                @foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+</body>
+
+</html>

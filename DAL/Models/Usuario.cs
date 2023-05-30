@@ -21,6 +21,8 @@ public partial class Usuario
 
     public long Rol { get; set; }
 
+    public bool? Verificado { get; set; }
+
     public virtual ICollection<Cita> CitaNombreMedicoNavigations { get; set; } = new List<Cita>();
 
     public virtual ICollection<Cita> CitaNombrePacienteNavigations { get; set; } = new List<Cita>();

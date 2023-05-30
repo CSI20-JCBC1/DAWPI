@@ -25,6 +25,7 @@ namespace DAL.DTO
 
         private long rol;
 
+        private bool? verificado;
 
 
         //Constructores
@@ -39,6 +40,7 @@ namespace DAL.DTO
             this.Email = email;
             this.Contrasenya = contrasenya;
             this.Rol = 2;
+            this.Verificado = false;
 
 
         }
@@ -52,6 +54,7 @@ namespace DAL.DTO
             this.Email = email;
             this.Contrasenya = contrasenya;
             this.Rol = 2;
+            this.Verificado = false;
         }
 
         public UsuarioDTO(string nombreCompleto, string movil, string email, string contrasenya,long rol)
@@ -63,6 +66,7 @@ namespace DAL.DTO
             this.Email = email;
             this.Contrasenya = contrasenya;
             this.Rol = rol;
+            this.Verificado = false;
 
 
         }
@@ -81,5 +85,6 @@ namespace DAL.DTO
         public string Email { get => email; set => email = value; }
         public string Contrasenya { get => contrasenya; set => contrasenya = value; }
         public long Rol { get => rol; set => rol = value; }
+        public bool? Verificado { get => verificado; set => verificado = value; }
     }
 }

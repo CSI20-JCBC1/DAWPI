@@ -6,65 +6,94 @@
 @{
     int cont = 0;
 }
+<!DOCTYPE html>
+<html>
 
-<form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
-    <div class="container">
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de Pacientes</h2>
-        <label for="filtroNombre" style="font-weight: bold;">Filtrar por nombre del paciente:</label>
-        <br />
-        <input type="text" class="form-control" id="filtroNombre" name="filtroNombre" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Nombre Paciente">
+<head>
+    <title>Listado de Pacientes</title>
+</head>
 
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
 
-        <table class="table" style="font-size: 16px;">
-            <thead>
-                <tr>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Paciente</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nombre y apellidos</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Correo</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Teléfono</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var usuario in Model.usuariosDTO)
-                {
+    <form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
+        <div class="container">
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de Pacientes</h2>
+            <label for="filtroNombre" style="font-weight: bold;">Filtrar por nombre del paciente:</label>
+            <br />
+            <input type="text" class="form-control" id="filtroNombre" name="filtroNombre" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Nombre Paciente">
+
+            <label for="filtroEmail" style="font-weight: bold;">Filtrar por email:</label>
+            <br />
+            <input type="text" class="form-control" id="filtroEmail" name="filtroEmail" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Email">
+
+            <label for="filtroTelefono" style="font-weight: bold;">Filtrar por número de teléfono:</label>
+            <br />
+            <input type="text" class="form-control" id="filtroTelefono" name="filtroTelefono" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Teléfono">
+
+            <table class="table" style="font-size: 16px;">
+                <thead>
                     <tr>
-
-                        <td style="text-align: center; padding: 5px;">
-                            @{
-                                cont++;
-                                @cont
-                            }
-                        </td>
-                        <td style="text-align: center; padding: 5px;">@usuario.NombreCompleto</td>
-                        <td style="text-align: center; padding: 5px;">@usuario.Email</td>
-                        <td style="text-align: center; padding: 5px;">@usuario.Movil</td>
-                        <td><button asp-page-handler="Borrar" class="btn btn-danger" type="submit" name="detalle" id="detalle" value="@usuario.Id">Borrar</button></td>
-
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Paciente</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nombre y apellidos</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Correo</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Teléfono</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model.usuariosDTO)
+                    {
+                        <tr>
+                            <td style="text-align: center; padding: 5px;">
+                                @{
+                                    cont++;
+                                    @cont
+                                }
+                            </td>
+                            <td style="text-align: center; padding: 5px;">@usuario.NombreCompleto</td>
+                            <td style="text-align: center; padding: 5px;">@usuario.Email</td>
+                            <td style="text-align: center; padding: 5px;">@usuario.Movil</td>
+                            <td><button asp-page-handler="Borrar" class="btn btn-danger" type="submit" name="detalle" id="detalle" value="@usuario.Id">Borrar</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
 
-    <br />
-</form>
 
+    <script>
+        document.getElementById("filtroNombre").addEventListener("input", function () {
+            filtrarPacientes();
+        });
 
-<script>
-    document.getElementById("filtroNombre").addEventListener("input", function () {
-        filtrarPacientes();
-    });
+        document.getElementById("filtroEmail").addEventListener("input", function () {
+            filtrarPacientes();
+        });
 
-    function filtrarPacientes() {
-        var filtroNombre = document.getElementById("filtroNombre").value.toLowerCase();
+        document.getElementById("filtroTelefono").addEventListener("input", function () {
+            filtrarPacientes();
+        });
 
-        var filas = document.getElementsByTagName("tr");
-        for (var i = 1; i < filas.length; i++) {
-            var nombrePaciente = filas[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+        function filtrarPacientes() {
+            var filtroNombre = document.getElementById("filtroNombre").value.toLowerCase();
+            var filtroEmail = document.getElementById("filtroEmail").value.toLowerCase();
+            var filtroTelefono = document.getElementById("filtroTelefono").value.toLowerCase();
 
-            var mostrarFila = (filtroNombre === "" || nombrePaciente.includes(filtroNombre));
+            var filas = document.getElementsByTagName("tr");
+            for (var i = 1; i < filas.length; i++) {
+                var nombrePaciente = filas[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+                var emailPaciente = filas[i].getElementsByTagName("td")[2].innerText.toLowerCase();
+                var telefonoPaciente = filas[i].getElementsByTagName("td")[3].innerText.toLowerCase();
 
-            filas[i].style.display = mostrarFila ? "" : "none";
+                var mostrarFila = (
+                    filtroNombre === "" || nombrePaciente.includes(filtroNombre)) &&
+                    (filtroEmail === "" || emailPaciente.includes(filtroEmail)) &&
+                    (filtroTelefono === "" || telefonoPaciente.includes(filtroTelefono));
+
+                filas[i].style.display = mostrarFila ? "" : "none";
+            }
         }
-    }
-</script>
+    </script>
+</body>
+
+</html>

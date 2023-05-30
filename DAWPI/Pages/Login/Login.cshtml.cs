@@ -17,6 +17,9 @@ namespace DAWPI.Pages.Login
         public string EmailUsuario { get; set; }
         private readonly DatabasePiContext _db;
 
+        [TempData]
+        public string MensajeExito { get; set; }
+
         [BindProperty]
         public string Email { get; set; } // Propiedad para el campo de correo electrónico del usuario
 
@@ -45,40 +48,49 @@ namespace DAWPI.Pages.Login
 
                 if (usuario != null && BCrypt.Net.BCrypt.Verify(Contrasenia, usuario.Contrasenya)) // Si el usuario existe y la contraseña es correcta
                 {
-                    List<CatRolUsuario> listaRol = _db.CatRolUsuarios.ToList(); // Se obtiene la lista de roles de usuario desde la base de datos
-                    RolDTO = RolDAOaDTO.listaRolDAOaDTO(listaRol); // Se convierte la lista de roles de usuario a formato DTO
-
-                    foreach (RolDTO rol in RolDTO) // Se busca el rol del usuario en la lista de roles en formato DTO
+                    if (usuario.Verificado == true)
                     {
-                        if (usuario.Rol == rol.NivelAcceso) // Si se encuentra el rol del usuario
-                        {
-                            ControlAcceso = rol.ControlAcceso; // Se obtiene el control de acceso del usuario
-                            break;
-                        }
-                    }
+                        List<CatRolUsuario> listaRol = _db.CatRolUsuarios.ToList(); // Se obtiene la lista de roles de usuario desde la base de datos
+                        RolDTO = RolDAOaDTO.listaRolDAOaDTO(listaRol); // Se convierte la lista de roles de usuario a formato DTO
 
-                    var claims = new List<Claim> // Se crea una lista de reclamaciones para la identidad del usuario
+                        foreach (RolDTO rol in RolDTO) // Se busca el rol del usuario en la lista de roles en formato DTO
+                        {
+                            if (usuario.Rol == rol.NivelAcceso) // Si se encuentra el rol del usuario
+                            {
+                                ControlAcceso = rol.ControlAcceso; // Se obtiene el control de acceso del usuario
+                                break;
+                            }
+                        }
+
+                        var claims = new List<Claim> // Se crea una lista de reclamaciones para la identidad del usuario
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Email), // Se crea una reclamación para el identificador de nombre del usuario
                         new Claim(ClaimTypes.Role, ControlAcceso), // Se crea una reclamación para el rol del usuario
                         new Claim("EmailUsuario", usuario.Email) // Se guarda el email en la sesion.
                     };
 
-                    var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
-                    await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
+                        var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
+                        await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
 
-                    if (usuario.Rol == 2)
-                    {
-                        return RedirectToPage("/Usuarios/Citas");
+                        if (usuario.Rol == 2)
+                        {
+                            return RedirectToPage("/Usuarios/Citas");
+                        }
+                        else if (usuario.Rol == 0)
+                        {
+                            return RedirectToPage("/Administrador/Acciones");
+                        }
+                        else if (usuario.Rol == 1)
+                        {
+                            return RedirectToPage("/Medicos/Citas");
+                        }
                     }
-                    else if (usuario.Rol == 0)
+                    else
                     {
-                        return RedirectToPage("/Administrador/Acciones");
+                        ModelState.AddModelError(string.Empty, "Verifique su usuario para iniciar Sesión."); // Se agrega un mensaje de error al modelo de estado
+                        return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
                     }
-                    else if (usuario.Rol == 1)
-                    {
-                        return RedirectToPage("/Medicos/Citas");
-                    }
+
                 }
                 else
                 {

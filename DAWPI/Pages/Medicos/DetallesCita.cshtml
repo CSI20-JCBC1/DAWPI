@@ -60,61 +60,74 @@
             }
 </style>
 
-<div class="details-container">
-    <h1>Detalles de la Cita</h1>
+@if (Model.Cita == null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        <h4>Aún no ha seleccionado ninguna cita, o esta no existe.</h4>
+        <p>
+            Por favor, asegurese de que la cita existe, vuelva atrás para seleccionar una cita.
+        </p>
 
-    <form method="post">
-        <table class="details-table">
-            <tr>
-                <th>Asunto:</th>
-                <td>@Model.Cita.Asunto</td>
-            </tr>
-            <tr>
-                <th>Nombre del Paciente:</th>
-                <td>@Model.Cita.NombrePaciente</td>
-            </tr>
-            <tr>
-                <th>Síntomas:</th>
-                <td>@Model.Cita.Sintomas</td>
-            </tr>
-            <tr>
-                <th>Planta:</th>
-                <td>@Model.Cita.CodPlanta</td>
-            </tr>
-            <tr>
-                <th>Sala:</th>
-                <td>@Model.Cita.CodSala</td>
-            </tr>
-            <tr>
-                <th>Fecha:</th>
-                <td><input type="date" name="fecha" id="fecha" required /></td>
-            </tr>
-            <tr>
-                <th>Hora:</th>
-                <td><input type="time" name="hora" id="hora" required /></td>
-            </tr>
-        </table>
-        <br />
+    </div>
+}
+else
+{
+    <div class="details-container">
+        <h1>Detalles de la Cita</h1>
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach (var modelState in ViewData.ModelState.Values)
-                    {
-                        foreach (var error in modelState.Errors)
+        <form method="post">
+            <table class="details-table">
+                <tr>
+                    <th>Asunto:</th>
+                    <td>@Model.Cita.Asunto</td>
+                </tr>
+                <tr>
+                    <th>Nombre del Paciente:</th>
+                    <td>@Model.Cita.NombrePaciente</td>
+                </tr>
+                <tr>
+                    <th>Síntomas:</th>
+                    <td>@Model.Cita.Sintomas</td>
+                </tr>
+                <tr>
+                    <th>Planta:</th>
+                    <td>@Model.Cita.CodPlanta</td>
+                </tr>
+                <tr>
+                    <th>Sala:</th>
+                    <td>@Model.Cita.CodSala</td>
+                </tr>
+                <tr>
+                    <th>Fecha:</th>
+                    <td><input type="date" name="fecha" id="fecha" required /></td>
+                </tr>
+                <tr>
+                    <th>Hora:</th>
+                    <td><input type="time" name="hora" id="hora" required /></td>
+                </tr>
+            </table>
+            <br />
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var modelState in ViewData.ModelState.Values)
                         {
-                            <li>@error.ErrorMessage</li>
+                            foreach (var error in modelState.Errors)
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
                         }
-                    }
-                </ul>
+                    </ul>
+                </div>
+            }
+
+            <div class="details-buttons">
+                <button asp-page-handler="Asignar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
             </div>
-        }
-
-        <div class="details-buttons">
-            <button asp-page-handler="Asignar" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;">Enviar</button>
-        </div>
-    </form>
+        </form>
 
 
-</div>
+    </div>
+}

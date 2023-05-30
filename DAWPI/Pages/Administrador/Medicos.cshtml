@@ -8,10 +8,18 @@
 
 <form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
     <div class="container">
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de Medicos</h2>
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Listado de Médicos</h2>
         <label for="filtroNombre" style="font-weight: bold;">Filtrar por nombre del médico:</label>
         <br />
         <input type="text" class="form-control" id="filtroNombre" name="filtroNombre" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Nombre Médico">
+
+        <label for="filtroEmail" style="font-weight: bold;">Filtrar por correo electrónico:</label>
+        <br />
+        <input type="text" class="form-control" id="filtroEmail" name="filtroEmail" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Correo Electrónico">
+
+        <label for="filtroTelefono" style="font-weight: bold;">Filtrar por número de teléfono:</label>
+        <br />
+        <input type="text" class="form-control" id="filtroTelefono" name="filtroTelefono" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;" placeholder="Número de Teléfono">
 
         <table class="table" style="font-size: 16px;">
             <thead>
@@ -26,10 +34,7 @@
                 @foreach (var usuario in Model.usuariosDTO)
                 {
                     <tr>
-
-                        <td style="text-align: center; padding: 5px;">@{
-                                cont++; @cont
-                            }</td>
+                        <td style="text-align: center; padding: 5px;">@{ cont++; @cont }</td>
                         <td style="text-align: center; padding: 5px;">@usuario.NombreCompleto</td>
                         <td style="text-align: center; padding: 5px;">@usuario.Email</td>
                         <td style="text-align: center; padding: 5px;">@usuario.Movil</td>
@@ -48,17 +53,31 @@
 
 <script>
     document.getElementById("filtroNombre").addEventListener("input", function () {
-        filtrarPacientes();
+        filtrarMedicos();
     });
 
-    function filtrarPacientes() {
+    document.getElementById("filtroEmail").addEventListener("input", function () {
+        filtrarMedicos();
+    });
+
+    document.getElementById("filtroTelefono").addEventListener("input", function () {
+        filtrarMedicos();
+    });
+
+    function filtrarMedicos() {
         var filtroNombre = document.getElementById("filtroNombre").value.toLowerCase();
+        var filtroEmail = document.getElementById("filtroEmail").value.toLowerCase();
+        var filtroTelefono = document.getElementById("filtroTelefono").value.toLowerCase();
 
         var filas = document.getElementsByTagName("tr");
         for (var i = 1; i < filas.length; i++) {
-            var nombrePaciente = filas[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+            var nombreMedico = filas[i].getElementsByTagName("td")[1].innerText.toLowerCase();
+            var emailMedico = filas[i].getElementsByTagName("td")[2].innerText.toLowerCase();
+            var telefonoMedico = filas[i].getElementsByTagName("td")[3].innerText.toLowerCase();
 
-            var mostrarFila = (filtroNombre === "" || nombrePaciente.includes(filtroNombre));
+            var mostrarFila = (filtroNombre === "" || nombreMedico.includes(filtroNombre)) &&
+                (filtroEmail === "" || emailMedico.includes(filtroEmail)) &&
+                (filtroTelefono === "" || telefonoMedico.includes(filtroTelefono));
 
             filas[i].style.display = mostrarFila ? "" : "none";
         }

@@ -39,6 +39,7 @@ namespace DAL.DTO
 
         private string? estadoCita;
 
+
         //Constructores
         public CitaDTO(int id, string asunto, string nombrePaciente, string sintomas, DateOnly fecha, TimeOnly hora, string nombreMedico, string codPlanta, string codSala, string enfermedad, string solucion, string estadoCita)
         {
