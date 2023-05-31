@@ -18,4 +18,6 @@ body {
     background-image: url('/css/fondo4.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }

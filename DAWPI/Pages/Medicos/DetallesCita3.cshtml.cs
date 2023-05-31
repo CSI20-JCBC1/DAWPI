@@ -27,6 +27,35 @@ namespace DAWPI.Pages.Medicos
                 Cita cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                 CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                 Cita = citaDTO;
+
+                List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
+                foreach (var estadoCita in listaEstadoCita)
+                {
+                    if (Cita.EstadoCita == estadoCita.EstadoCita)
+                    {
+                        Cita.EstadoCita = estadoCita.DescEstadoCita;
+                    }
+                }
+
+                List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+                foreach (var sala in listaSalaCita)
+                {
+                    if (Cita.CodSala == sala.CodSala)
+                    {
+                        Cita.CodSala = sala.NombreSala;
+                    }
+                }
+
+                List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+                foreach (var planta in listaPlantaCita)
+                {
+                    if (Cita.CodPlanta == planta.CodPlanta)
+                    {
+                        Cita.CodPlanta = planta.NombrePlanta;
+                    }
+                }
+
+
             }
         }
     }

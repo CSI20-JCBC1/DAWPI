@@ -61,7 +61,7 @@
                         <td style="text-align: center; padding: 5px;">@cita.Hora</td>
                         <td style="text-align: center; padding: 5px;">@cita.CodPlanta</td>
                         <td style="text-align: center; padding: 5px;">@cita.CodSala</td>
-                        @if (cita.EstadoCita.Equals("Pendiente de fecha y hora"))
+                        @if (cita.EstadoCita.Equals("Pendiente  de fecha y hora"))
                         {
                             <td><button asp-page-handler="Detalles" class="btn btn-primary btn-sm" type="submit" name="detalle" id="detalle" value="@cita.Id">Asignar fecha y hora</button></td>
                         }

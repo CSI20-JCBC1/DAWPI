@@ -3,9 +3,7 @@
 @{
 }
 
-<style>
-
-
+@*<style>
     h1 {
         text-align: center;
         margin-bottom: 30px;
@@ -18,8 +16,79 @@
     p {
         margin-bottom: 0;
     }
+
+    .alert {
+        margin: auto;
+        max-width: 800px;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
 </style>
 
+@if (Model.Cita == null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        <h4>Aún no ha seleccionado ninguna cita, o esta no existe.</h4>
+        <p>
+            Por favor, asegúrese de que la cita existe. Vuelva atrás para seleccionar una cita.
+        </p>
+    </div>
+}
+else
+{
+    <div class="alert">
+        <h1>Detalles de la cita</h1>
+
+        <div>
+            <h4>Asunto:</h4>
+            <p>@Model.Cita.Asunto</p>
+        </div>
+
+        <div>
+            <h4>Nombre del paciente:</h4>
+            <p>@Model.Cita.NombrePaciente</p>
+        </div>
+
+        <div>
+            <h4>Síntomas:</h4>
+            <p>@Model.Cita.Sintomas</p>
+        </div>
+
+        <div>
+            <h4>Fecha:</h4>
+            <p>@Model.Cita.Fecha</p>
+        </div>
+
+        <div>
+            <h4>Hora:</h4>
+            <p>@Model.Cita.Hora</p>
+        </div>
+
+        <div>
+            <h4>Médico:</h4>
+            <p>@Model.Cita.NombreMedico</p>
+        </div>
+
+        <div>
+            <h4>Enfermedad:</h4>
+            <p>@Model.Cita.Enfermedad</p>
+        </div>
+
+        <div>
+            <h4>Solución:</h4>
+            <p>@Model.Cita.Solucion</p>
+        </div>
+
+        <div>
+            <h4>Estado de la cita:</h4>
+            <p>@Model.Cita.EstadoCita</p>
+        </div>
+    </div>
+}*@
+<!DOCTYPE html>
+<html>
 @if (Model.Cita == null)
 {
     <div class="alert alert-success text-center" role="alert">
@@ -32,60 +101,79 @@
 }
 else
 {
-<div style="margin: auto;
-        max-width: 800px;
-        padding: 10px;
-        border-radius: 10px;
-        background-color: #f5f5f5;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
-
-    <h1>Detalles de la cita</h1>
-
-    <div>
-        <h4>Asunto:</h4>
-        <p>@Model.Cita.Asunto</p>
-    </div>
-
-    <div>
-        <h4>Nombre del paciente:</h4>
-        <p>@Model.Cita.NombrePaciente</p>
-    </div>
-
-    <div>
-        <h4>Síntomas:</h4>
-        <p>@Model.Cita.Sintomas</p>
-    </div>
 
 
-    <div>
-        <h4>Fecha:</h4>
-        <p>@Model.Cita.Fecha</p>
-    </div>
+    <head>
+        <title>Detalles de la cita</title>
+    </head>
 
-    <div>
-        <h4>Hora:</h4>
-        <p>@Model.Cita.Hora</p>
-    </div>
+    <body style="font-family: Arial, sans-serif; background-color: #f5f5f5;">
 
-    <div>
-        <h4>Médico:</h4>
-        <p>@Model.Cita.NombreMedico</p>
-    </div>
+        <div style="margin: auto; max-width: 800px; padding: 20px; border-radius: 10px; background-color: #ffffff; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
+            <h1 style="text-align: center; color: #333333; margin-bottom: 30px;">Detalles de la cita</h1>
 
-    <div>
-        <h4>Enfermedad:</h4>
-        <p>@Model.Cita.Enfermedad</p>
-    </div>
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Asunto:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.Asunto</p>
+            </div>
 
-    <div>
-        <h4>Solución:</h4>
-        <p>@Model.Cita.Solucion</p>
-    </div>
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Nombre del paciente:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.NombrePaciente</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Síntomas:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.Sintomas</p>
+            </div>
 
 
-    <div>
-        <h4>Estado de la cita:</h4>
-        <p>@Model.Cita.EstadoCita</p>
-    </div>
-</div>
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Médico:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.NombreMedico</p>
+            </div>
+
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Fecha:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.Fecha</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Hora:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.Hora</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Planta:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.CodPlanta</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Consulta:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.CodSala</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Enfermedad diagnosticada:</h4>
+                <p style="margin-bottom: 0; color: #333333; background-color: #ffd700; padding: 2px;">@Model.Cita.Enfermedad</p>
+            </div>
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Plan de tratamiento y solución:</h4>
+                <p style="margin-bottom: 0; color: #333333; background-color: #ffd700; padding: 2px;">@Model.Cita.Solucion</p>
+            </div>
+
+
+            <div style="border-top: 1px solid #dddddd; padding-top: 20px; margin-top: 20px;">
+                <h4 style="color: #555555; margin-top: 30px;">Estado de la cita:</h4>
+                <p style="margin-bottom: 0; color: #777777;">@Model.Cita.EstadoCita</p>
+            </div>
+        </div>
+
+    </body>
+
+
+
 }
+</html>

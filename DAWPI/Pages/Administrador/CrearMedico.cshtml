@@ -28,15 +28,26 @@
                 <input type="text" name="especialidad" id="especialidad" value="" placeholder="Especialidad" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
             </div>
             <br />
-            <div>
-                <label for="codPlanta">Planta</label>
-                <input type="text" name="codPlanta" id="codPlanta" value="" placeholder="Planta" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
-            <br />
-            <div>
-                <label for="codSala">Consulta</label>
-                    <input type="text" name="codSala" id="codSala" value="" placeholder="Consulta" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
+                <div>
+                    <label for="codPlanta">Planta</label>
+                    <select name="codPlanta" id="codPlanta" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                        @foreach (var planta in @Model.listaPlantaCitaDTO)
+                        {
+                            <option value="@planta.CodPlanta">@planta.NombrePlanta</option>
+                        }
+                    </select>
+
+                </div>
+                <br />
+                <div>
+                    <label for="codSala">Consulta</label>
+                    <select name="codSala" id="codSala" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                        @foreach (var sala in @Model.listaSalaCitaDTO)
+                        {
+                            <option value="@sala.CodSala">@sala.NombreSala</option>
+                        }
+                    </select>
+                </div>
             <br />
             <div>
                 <label for="contrasenia">Clave de acceso</label>

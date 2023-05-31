@@ -64,7 +64,12 @@ namespace DAWPI.Pages.Usuarios
         {
             return RedirectToPage("/Usuarios/PedirCita");
         }
+        public IActionResult OnPostBorrar()
+        {
 
+            HttpContext.Session.SetInt32("detalle", detalle);
+            return RedirectToPage("./Borrar");
+        }
         public IActionResult OnPostDetalles()
         {
 

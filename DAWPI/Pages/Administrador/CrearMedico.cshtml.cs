@@ -1,3 +1,4 @@
+using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.DTOaDAO;
 using DAL.Models;
@@ -41,16 +42,41 @@ namespace DAWPI.Pages.Administrador
 
         [BindProperty]
         public string Contrasenia2 { get; set; }
+        public List<CatSalaDTO> listaSalaCitaDTO { get; set; }
+        public List<CatPlantaDTO> listaPlantaCitaDTO { get; set; }
         public void OnGet()
         {
+            try
+            {
+                List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+
+                listaSalaCitaDTO = CatSalaDAOaDTO.listacatSalaDAOaDTO(listaSalaCita);
+
+                List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+                listaPlantaCitaDTO = CatPlantaDAOaDTO.listacatPlantaDAOaDTO(listaPlantaCita);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
         }
         public async Task<IActionResult> OnPostSubmitAsync()
         {
             try
             {
+
+                List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+
+                listaSalaCitaDTO = CatSalaDAOaDTO.listacatSalaDAOaDTO(listaSalaCita);
+
+                List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+                listaPlantaCitaDTO = CatPlantaDAOaDTO.listacatPlantaDAOaDTO(listaPlantaCita);
                 //Crear medico en el catálogo
 
-                Usuario usuario = UsuarioDTOaDAO.usuarioDTOaDAO(new UsuarioDTO(Nombre, Movil, Email, Contrasenia,1));
+                Usuario usuario = UsuarioDTOaDAO.usuarioDTOaDAO(new UsuarioDTO(Nombre, Movil, Email, Contrasenia, 1));
                 var usuarioBusqueda = _db.Usuarios.FirstOrDefault(e => e.Email == Email);
                 string email2 = usuarioBusqueda?.Email ?? string.Empty;
                 CatInfoMedico infoMedico = CatInfoMedicoDTOaDAO.catInfoMedicoDTOaDAO(new CatInfoMedicoDTO(Nombre, Especialidad, CodSala, CodPlanta));
@@ -105,6 +131,7 @@ namespace DAWPI.Pages.Administrador
                     string hashedPassword = BCrypt.Net.BCrypt.HashPassword(Contrasenia);
                     // Asignar la contraseña encriptada al objeto Usuario
                     usuario.Contrasenya = hashedPassword;
+                    usuario.Verificado = true;
                     _db.Usuarios.Add(usuario);
                     _db.SaveChanges();
 
