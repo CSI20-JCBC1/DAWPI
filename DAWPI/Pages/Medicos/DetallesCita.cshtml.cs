@@ -137,7 +137,7 @@ namespace DAWPI.Pages.Medicos
                         // Actualiza la cita con la nueva fecha, hora y estado
                         cita.Fecha = fechaCita;
                         cita.Hora = horaCita;
-                        cita.EstadoCita = "F";
+                        cita.EstadoCita = "A";
                         _db.SaveChanges();
                     }
                     else

@@ -43,6 +43,8 @@ namespace DAWPI.Pages.Register
                 // En el formulario ya se controla el número máximo de caracteres
                 // Validamos también que la contraseña contenga al menos una mayúscula, una minúscula y un carácter especial
                 string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
+                string phoneNumberPattern = @"^\d{9}$"; // Expresión regular para verificar 9 dígitos del 0 al 9
+
                 if (contrasenia != contrasenia2)
                 {
                     ModelState.AddModelError(string.Empty, "Error, las contraseñas no coinciden"); // Se agrega un mensaje de error al modelo de estado
@@ -53,6 +55,11 @@ namespace DAWPI.Pages.Register
                     ModelState.AddModelError(string.Empty, "Error, la contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, una minúscula, y un carácter especial."); // Se agrega un mensaje de error al modelo de estado
                     return Page();
 
+                }
+                else if (!Regex.IsMatch(movil, phoneNumberPattern))
+                {
+                    ModelState.AddModelError(string.Empty, "Error, el número de teléfono debe tener exactamente 9 dígitos."); // Agrega un mensaje de error al modelo de estado
+                    return Page();
                 }
                 //Validamos que el email introducido no se encuentra en la base de datos, si se encuentra mandamos un menasje de error 
                 //a la página de registro
@@ -76,10 +83,13 @@ namespace DAWPI.Pages.Register
                     message.To.Add(new MailboxAddress(usuario.NombreCompleto, email)); // Destinatario
                     message.Subject = "Verificación de correo electrónico";
 
+                    string verificationLink = "https://localhost:7082/Register/Verificacion"; // Enlace de verificación
+
+
                     // Cuerpo del mensaje
-                    message.Body = new TextPart("plain")
+                    message.Body = new TextPart("html")
                     {
-                        Text = "¡Gracias por registrarte! Por favor, verifica tu dirección de correo electrónico haciendo clic en el siguiente enlace: https://localhost:7082/Register/Verificacion"
+                        Text = $"¡Gracias por registrarte! Por favor, verifica tu dirección de correo electrónico haciendo <a href=\"{verificationLink}\">click aquí</a>."
                     };
 
                     // Configuración del cliente SMTP

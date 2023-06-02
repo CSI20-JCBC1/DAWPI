@@ -14,11 +14,17 @@ namespace DAWPI.Pages.Administrador
     {
         [BindProperty]
         public int idAsig { get; set; }
+
+        private readonly ILogger<NuevaCitaModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public NuevaCitaModel(DatabasePiContext db)
+        public NuevaCitaModel(DatabasePiContext db, ILogger<NuevaCitaModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
+
         public string especialidad { get; set; }
         public string nombre { get; set; }
         public CatInfoMedicoDTO infoMedicoDTO { get; set; }
@@ -29,6 +35,10 @@ namespace DAWPI.Pages.Administrador
         {
             try 
             {
+                var message = $"Entrando en página para asignar cita a un médico: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 int? detalle = HttpContext.Session.GetInt32("detalle");
                 if (detalle.HasValue)
                 {
@@ -76,6 +86,8 @@ namespace DAWPI.Pages.Administrador
             catch (Exception ex) 
             { 
                 Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción producida en la página para asignar cita a un médico: {DateTime.Now.ToString()}");
             }
         }
 
@@ -105,17 +117,40 @@ namespace DAWPI.Pages.Administrador
 
                     // Guardar los cambios en la base de datos
                     _db.SaveChanges();
+
+                    var message = $"Cita asignada con éxito: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message);
+                    WriteLogToFile(message);
                 }
             }
             catch (Exception ex)
             {
                 Console.Write(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción producida en la página para asignar cita a un médico: {DateTime.Now.ToString()}");
+                return Page();
             }
 
           
 
             return RedirectToPage("/Administrador/Medicos");
 
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

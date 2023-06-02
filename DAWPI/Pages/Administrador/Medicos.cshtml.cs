@@ -14,10 +14,14 @@ namespace DAWPI.Pages.Administrador
         [BindProperty]
         public int detalle { get; set;}
 
+        private readonly ILogger<MedicosModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public MedicosModel(DatabasePiContext db)
+        public MedicosModel(DatabasePiContext db, ILogger<MedicosModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public List<UsuarioDTO> usuariosDTO { get; set; }
@@ -27,18 +31,19 @@ namespace DAWPI.Pages.Administrador
 
             try
             {
+                var message = $"Entrando en página para la gestión de médicos: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
 
                 List<Usuario> usuarios = _db.Usuarios.Where(u => u.Rol == 1).ToList();
-
                 usuariosDTO=UsuarioDAOaDTO.listaUsuarioDAOaDTO(usuarios);
-
-               
-
             }
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
+                Console.WriteLine(e.ToString());
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Se ha producido una excepción para la gestión de médicos: {DateTime.Now.ToString()}");
 
             }
 
@@ -64,5 +69,20 @@ namespace DAWPI.Pages.Administrador
             return RedirectToPage("./Borrar");
         }
 
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
     }
 }

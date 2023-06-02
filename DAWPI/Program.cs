@@ -3,6 +3,14 @@ using DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders(); // Limpiar proveedores existentes (opcional)
+
+    logging.AddConsole(); // Agregar proveedor de registro para la consola
+    logging.AddDebug(); // Agregar proveedor de registro para la depuración
+  
+});
 
 
 

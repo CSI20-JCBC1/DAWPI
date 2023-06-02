@@ -13,10 +13,14 @@ namespace DAWPI.Pages.Administrador
     [Authorize(Roles = "Admin")]
     public class CrearMedicoModel : PageModel
     {
+        private readonly ILogger<CrearMedicoModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public CrearMedicoModel(DatabasePiContext db)
+        public CrearMedicoModel(DatabasePiContext db, ILogger<CrearMedicoModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         [BindProperty]
@@ -48,6 +52,10 @@ namespace DAWPI.Pages.Administrador
         {
             try
             {
+                var message = $"Entrando en página para crear médico: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
 
                 listaSalaCitaDTO = CatSalaDAOaDTO.listacatSalaDAOaDTO(listaSalaCita);
@@ -59,6 +67,9 @@ namespace DAWPI.Pages.Administrador
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Se ha producido una excepción la página para crear médico: {DateTime.Now.ToString()}");
+
             }
 
 
@@ -67,6 +78,7 @@ namespace DAWPI.Pages.Administrador
         {
             try
             {
+                
 
                 List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
 
@@ -135,14 +147,36 @@ namespace DAWPI.Pages.Administrador
                     _db.Usuarios.Add(usuario);
                     _db.SaveChanges();
 
+                    var message = $"Médico creado: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message);
+                    WriteLogToFile(message);
 
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Se ha producido una excepción la página para crear médico: {DateTime.Now.ToString()}");
+                return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
             }
             return RedirectToPage("/Administrador/Medicos");
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

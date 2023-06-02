@@ -13,10 +13,14 @@ namespace DAWPI.Pages.Administrador
 {
     public class BorrarModel : PageModel
     {
+        private readonly ILogger<BorrarModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public BorrarModel(DatabasePiContext db)
+        public BorrarModel(DatabasePiContext db, ILogger<BorrarModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public UsuarioDTO usuarioDTO { get; set; }
@@ -24,8 +28,13 @@ namespace DAWPI.Pages.Administrador
 
         public void OnGet()
         {
+            
             try
             {
+                var message = $"Entrando en página para borrar de usuario o médico: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
                 if (detalle.HasValue)
@@ -33,7 +42,7 @@ namespace DAWPI.Pages.Administrador
                     Usuario? usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
                     if (usuario == null)
                     {
-                        Response.Redirect("/Administrador/Medicos");
+                        Response.Redirect("/Administrador/Acciones");
                     }
                     else
                     {
@@ -44,6 +53,8 @@ namespace DAWPI.Pages.Administrador
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Se ha producido una excepción en página eliminar usuario o médico de administrador: {DateTime.Now.ToString()}");
             }
         }
 
@@ -52,6 +63,7 @@ namespace DAWPI.Pages.Administrador
         {
             try
             {
+
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
                 Console.WriteLine(detalle);
@@ -94,6 +106,10 @@ namespace DAWPI.Pages.Administrador
                             _db.Remove(usuario);
                             _db.SaveChanges();
 
+                            var message = $"Médico borrado con éxito: {DateTime.Now.ToString()}";
+                            _logger.LogInformation(message);
+                            WriteLogToFile(message);
+
                         }
                     }
                     else if (usuarioDTO.Rol == 2)
@@ -112,13 +128,11 @@ namespace DAWPI.Pages.Administrador
                         _db.SaveChanges();
                         _db.Remove(usuario);
                         _db.SaveChanges();
+                        var message = $"Paciente borrado con éxito: {DateTime.Now.ToString()}";
+                        _logger.LogInformation(message);
+                        WriteLogToFile(message);
 
                     }
-
-
-
-
-
                 }
                 else
                 {
@@ -129,9 +143,27 @@ namespace DAWPI.Pages.Administrador
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Se ha producido una excepción al intentar borrar paciente o médico: {DateTime.Now.ToString()}");
+                return Page();
             }
 
             return RedirectToPage("/Administrador/Acciones");
+        }
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace DAWPI.Pages.Register
     public class VerificacionModel : PageModel
     {
         [BindProperty]
-        public string NombreCompleto { get; set; }
+        public string Email { get; set; }
         [BindProperty]
         public string Contrasenia { get; set; }
         private readonly DatabasePiContext _db;
@@ -26,9 +26,9 @@ namespace DAWPI.Pages.Register
                 bool existe = false;
                 foreach (Usuario usu in listausuarios)
                 {
-                    if (NombreCompleto == usu.NombreCompleto)
+                    if (Email == usu.Email)
                     {
-                        usuario = _db.Usuarios.FirstOrDefault(e => e.NombreCompleto == NombreCompleto);
+                        usuario = _db.Usuarios.FirstOrDefault(e => e.Email == Email);
                         existe = true; break;
                     }
                 }
@@ -36,15 +36,18 @@ namespace DAWPI.Pages.Register
 
                 if (existe)
                 {
-                    usuario.Verificado = true;
-
                     if (usuario.Verificado == true)
                     {
                         ModelState.AddModelError(string.Empty, "Su usuario ya está verificado."); // Se agrega un mensaje de error al modelo de estado
                         return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
                     }
+
+                    
+
                     if (BCrypt.Net.BCrypt.Verify(Contrasenia, usuario.Contrasenya))
                     {
+
+                        usuario.Verificado = true;
                         _db.SaveChanges();
 
                     }
@@ -55,7 +58,7 @@ namespace DAWPI.Pages.Register
                     }
 
                 }
-              
+
                 else
                 {
                     ModelState.AddModelError(string.Empty, "El nombre de usuario no existe, por favor asegureser de introducir bien su nombre."); // Se agrega un mensaje de error al modelo de estado

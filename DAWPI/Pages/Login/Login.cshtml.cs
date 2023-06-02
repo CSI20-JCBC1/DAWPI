@@ -1,6 +1,7 @@
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.Models;
+using DAWPI.Pages.Administrador;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ namespace DAWPI.Pages.Login
     public class LoginModel : PageModel
     {
         public string EmailUsuario { get; set; }
-        private readonly DatabasePiContext _db;
 
         [TempData]
         public string MensajeExito { get; set; }
@@ -30,9 +30,14 @@ namespace DAWPI.Pages.Login
 
         public List<RolDTO> RolDTO { get; set; } // Lista de roles del usuario en formato DTO
 
-        public LoginModel(DatabasePiContext db)
+        private readonly ILogger<LoginModel> _logger;
+        private readonly string _logFilePath;
+        private readonly DatabasePiContext _db;
+        public LoginModel(DatabasePiContext db, ILogger<LoginModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public void OnGet()
@@ -44,6 +49,11 @@ namespace DAWPI.Pages.Login
         {
             try
             {
+
+                var message = $"Entrando en página para iniciar sesión: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 var usuario = _db.Usuarios.FirstOrDefault(e => e.Email == Email); // Se busca al usuario en la base de datos por su correo electrónico
 
                 if (usuario != null && BCrypt.Net.BCrypt.Verify(Contrasenia, usuario.Contrasenya)) // Si el usuario existe y la contraseña es correcta
@@ -72,9 +82,14 @@ namespace DAWPI.Pages.Login
                         var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
                         await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
 
+                        message = $"Sesión iniciada con éxito: {DateTime.Now.ToString()}";
+                        _logger.LogInformation(message);
+                        WriteLogToFile(message);
+
                         if (usuario.Rol == 2)
                         {
                             return RedirectToPage("/Usuarios/Citas");
+                          
                         }
                         else if (usuario.Rol == 0)
                         {
@@ -103,7 +118,10 @@ namespace DAWPI.Pages.Login
             {
                 // Manejo adecuado de excepciones, como registrar los errores en un archivo de registro o mostrar un mensaje de error al usuario
                 Console.WriteLine(e.Message);
-                ModelState.AddModelError(string.Empty, "Error en el proceso de inicio de sesión. Por favor, inténtelo de nuevo."); // Se agrega un mensaje de error genérico al modelo de estado
+                 
+                _logger.LogInformation(e.Message);
+                WriteLogToFile($"Excepción en la página de inicio de sesión: {DateTime.Now.ToString()}");
+
                 return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
             }
 
@@ -113,5 +131,22 @@ namespace DAWPI.Pages.Login
             
         }
 
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
     }
+
 }
+
