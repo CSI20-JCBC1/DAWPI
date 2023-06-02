@@ -117,7 +117,6 @@ namespace DAWPI.Pages.Login
             catch (Exception e)
             {
                 // Manejo adecuado de excepciones, como registrar los errores en un archivo de registro o mostrar un mensaje de error al usuario
-                Console.WriteLine(e.Message);
                  
                 _logger.LogInformation(e.Message);
                 WriteLogToFile($"Excepción en la página de inicio de sesión: {DateTime.Now.ToString()}");
@@ -143,7 +142,7 @@ namespace DAWPI.Pages.Login
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

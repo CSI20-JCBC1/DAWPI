@@ -64,7 +64,6 @@ namespace DAWPI.Pages.Administrador
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
                 _logger.LogInformation(e.ToString());
                 WriteLogToFile($"Se ha producido una excepción la página para gestionar citas del médico: {DateTime.Now.ToString()}");
 
@@ -93,7 +92,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

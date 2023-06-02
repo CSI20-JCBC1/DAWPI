@@ -29,7 +29,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Se ha producido una excepción en página principal de administrador: {DateTime.Now.ToString()}");
 
@@ -58,7 +57,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

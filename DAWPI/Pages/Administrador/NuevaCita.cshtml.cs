@@ -85,7 +85,6 @@ namespace DAWPI.Pages.Administrador
             } 
             catch (Exception ex) 
             { 
-                Console.WriteLine(ex.ToString());
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Excepción producida en la página para asignar cita a un médico: {DateTime.Now.ToString()}");
             }
@@ -125,7 +124,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.Write(ex.ToString());
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Excepción producida en la página para asignar cita a un médico: {DateTime.Now.ToString()}");
                 return Page();
@@ -149,7 +147,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

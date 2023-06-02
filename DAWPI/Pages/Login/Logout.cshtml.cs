@@ -31,7 +31,6 @@ namespace DAWPI.Pages.Login
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile("Excepción producida en el inicio de sesión");
             }
@@ -51,7 +50,8 @@ namespace DAWPI.Pages.Login
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+
             }
         }
     }

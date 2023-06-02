@@ -52,7 +52,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Se ha producido una excepción en página eliminar usuario o médico de administrador: {DateTime.Now.ToString()}");
             }
@@ -142,7 +141,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Se ha producido una excepción al intentar borrar paciente o médico: {DateTime.Now.ToString()}");
                 return Page();
@@ -162,7 +160,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

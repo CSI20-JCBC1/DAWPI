@@ -41,7 +41,6 @@ namespace DAWPI.Pages.Administrador
             catch (Exception e)
             {
 
-                Console.WriteLine(e);
                 _logger.LogInformation(e.ToString());
                 WriteLogToFile($"Excepción en la página para gestion de pacientes: {DateTime.Now.ToString()}");
 
@@ -67,7 +66,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

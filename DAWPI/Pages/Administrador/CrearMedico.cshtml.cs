@@ -66,7 +66,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Se ha producido una excepción la página para crear médico: {DateTime.Now.ToString()}");
 
@@ -155,7 +154,6 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 _logger.LogInformation(e.ToString());
                 WriteLogToFile($"Se ha producido una excepción la página para crear médico: {DateTime.Now.ToString()}");
                 return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
@@ -175,7 +173,7 @@ namespace DAWPI.Pages.Administrador
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
             }
         }
     }
