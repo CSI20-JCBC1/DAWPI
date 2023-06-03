@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DAL.DAOaDTO;
 using DAL.DTO;
@@ -16,6 +17,7 @@ namespace DAWPI.Pages.Administrador
         private readonly ILogger<BorrarModel> _logger;
         private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
+
         public BorrarModel(DatabasePiContext db, ILogger<BorrarModel> logger)
         {
             _db = db;
@@ -28,7 +30,6 @@ namespace DAWPI.Pages.Administrador
 
         public void OnGet()
         {
-            
             try
             {
                 var message = $"Entrando en página para borrar de usuario o médico: {DateTime.Now.ToString()}";
@@ -57,15 +58,12 @@ namespace DAWPI.Pages.Administrador
             }
         }
 
-
         public IActionResult OnPost(string confirmacion)
         {
             try
             {
-
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
-                Console.WriteLine(detalle);
                 if (detalle.HasValue)
                 {
                     Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
@@ -76,8 +74,7 @@ namespace DAWPI.Pages.Administrador
 
                 if (!string.IsNullOrEmpty(confirmacion) && confirmacion.Trim() == usuarioDTO.NombreCompleto)
                 {
-                    // Check if the user is a doctor and has pending appointments
-                    if (usuarioDTO.Rol == 1)
+                    if (usuarioDTO.Rol == 1) // Si es un médico
                     {
                         List<Cita> listaCitas = _db.Citas.ToList();
 
@@ -96,22 +93,21 @@ namespace DAWPI.Pages.Administrador
                             return Page();
                         }
 
+                        // Eliminar médico y su información adicional
                         Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
                         CatInfoMedico infomedico = _db.CatInfoMedicos.FirstOrDefault(i => i.NombreMedico == usuario.NombreCompleto);
                         if (usuario != null)
                         {
                             _db.Remove(infomedico);
-                            _db.SaveChanges();
                             _db.Remove(usuario);
                             _db.SaveChanges();
 
                             var message = $"Médico borrado con éxito: {DateTime.Now.ToString()}";
                             _logger.LogInformation(message);
                             WriteLogToFile(message);
-
                         }
                     }
-                    else if (usuarioDTO.Rol == 2)
+                    else if (usuarioDTO.Rol == 2) // Si es un paciente
                     {
                         List<Cita> listaCitas = _db.Citas.ToList();
                         Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
@@ -124,13 +120,12 @@ namespace DAWPI.Pages.Administrador
                             }
                         }
 
-                        _db.SaveChanges();
                         _db.Remove(usuario);
                         _db.SaveChanges();
+
                         var message = $"Paciente borrado con éxito: {DateTime.Now.ToString()}";
                         _logger.LogInformation(message);
                         WriteLogToFile(message);
-
                     }
                 }
                 else
@@ -143,11 +138,13 @@ namespace DAWPI.Pages.Administrador
             {
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Se ha producido una excepción al intentar borrar paciente o médico: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "Se ha producido un error al intentar borrar el paciente o médico. Por favor, inténtalo nuevamente más tarde.");
                 return Page();
             }
 
             return RedirectToPage("/Administrador/Acciones");
         }
+
         private void WriteLogToFile(string message)
         {
             try

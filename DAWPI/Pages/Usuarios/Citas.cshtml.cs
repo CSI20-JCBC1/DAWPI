@@ -5,6 +5,7 @@ using System.Data;
 using DAL.Models;
 using DAL.DAOaDTO;
 using DAL.DTO;
+using DAWPI.Pages.Medicos;
 
 namespace DAWPI.Pages.Usuarios
 {
@@ -15,10 +16,14 @@ namespace DAWPI.Pages.Usuarios
         public int detalle { get; set; }
         public string EmailUsuario { get; set; }
 
+        private readonly ILogger<CitasModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public CitasModel(DatabasePiContext db)
+        public CitasModel(DatabasePiContext db, ILogger<CitasModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public List<CitaDTO> listaCitasDTO { get; set; }
@@ -28,6 +33,10 @@ namespace DAWPI.Pages.Usuarios
             EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
 
             try {
+
+                var message = $"Entrando en página para ver citas del paciente: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
 
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
 
@@ -51,9 +60,10 @@ namespace DAWPI.Pages.Usuarios
                 }
                 
             }
-            catch(Exception e) { 
+            catch(Exception e) {
 
-                Console.WriteLine(e);
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}");
 
             }
 
@@ -78,5 +88,20 @@ namespace DAWPI.Pages.Usuarios
 
         }
 
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
+        }
     }
 }

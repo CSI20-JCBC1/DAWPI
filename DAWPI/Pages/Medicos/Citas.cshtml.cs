@@ -1,6 +1,7 @@
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.Models;
+using DAWPI.Pages.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,10 +16,14 @@ namespace DAWPI.Pages.Medicos
         public int detalle { get; set; }
         public string EmailUsuario { get; set; }
 
+        private readonly ILogger<CitasModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public CitasModel(DatabasePiContext db)
+        public CitasModel(DatabasePiContext db, ILogger<CitasModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public List<CitaDTO> listaCitasDTO { get; set; }
@@ -26,10 +31,14 @@ namespace DAWPI.Pages.Medicos
         public List<CatEstadoCitaDTO> listaEstadoDTO { get; set; }
         public void OnGet()
         {
-            EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
 
             try
             {
+                var message = $"Entrando en página principal de médicos: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
+                EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
 
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
 
@@ -84,6 +93,8 @@ namespace DAWPI.Pages.Medicos
 
                 Console.WriteLine(e);
 
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Excepción ocurrida en la página principal de médicos: {DateTime.Now.ToString()}");
             }
 
         }
@@ -111,7 +122,21 @@ namespace DAWPI.Pages.Medicos
             return RedirectToPage("./DetallesCita3");
 
         }
-
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
+        }
 
     }
 }

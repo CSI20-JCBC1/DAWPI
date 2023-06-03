@@ -1,5 +1,6 @@
 using DAL.DTO;
 using DAL.Models;
+using DAWPI.Pages.Medicos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,16 +12,25 @@ namespace DAWPI.Pages.Register
         public string Email { get; set; }
         [BindProperty]
         public string Contrasenia { get; set; }
+
+        private readonly ILogger<VerificacionModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public VerificacionModel(DatabasePiContext db)
+        public VerificacionModel(DatabasePiContext db, ILogger<VerificacionModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
         public IActionResult OnPostVerificar()
         {
 
             try
             {
+                var message = $"Entrando en página de verificación de usuario: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 var usuario = new Usuario();
                 List<Usuario> listausuarios = _db.Usuarios.ToList();
                 bool existe = false;
@@ -50,6 +60,10 @@ namespace DAWPI.Pages.Register
                         usuario.Verificado = true;
                         _db.SaveChanges();
 
+                        message = $"Usuario verificado: {DateTime.Now.ToString()}";
+                        _logger.LogInformation(message);
+                        WriteLogToFile(message);
+
                     }
                     else
                     {
@@ -68,10 +82,27 @@ namespace DAWPI.Pages.Register
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción en la página de verificación de usuario: {DateTime.Now.ToString()}");
             }
             TempData["MensajeExito"] = "Verificación exitosa. Puedes iniciar sesión.";
             return RedirectToPage("../Login/Login");
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
         }
 
     }

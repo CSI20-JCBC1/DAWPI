@@ -1,6 +1,7 @@
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.Models;
+using DAWPI.Pages.Medicos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,10 +9,14 @@ namespace DAWPI.Pages.Usuarios
 {
     public class BorrarModel : PageModel
     {
+        private readonly ILogger<BorrarModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public BorrarModel(DatabasePiContext db)
+        public BorrarModel(DatabasePiContext db, ILogger<BorrarModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public CitaDTO citaDTO { get; set; }
@@ -21,6 +26,10 @@ namespace DAWPI.Pages.Usuarios
         {
             try
             {
+                var message = $"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 detalle = HttpContext.Session.GetInt32("detalle");
                 if (detalle.HasValue)
@@ -28,7 +37,7 @@ namespace DAWPI.Pages.Usuarios
                    Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                     if (cita == null)
                     {
-                        Response.Redirect("/Administrador/Medicos");
+                        Response.Redirect("/Usuarios/Citas");
                     }
                     else
                     {
@@ -38,7 +47,8 @@ namespace DAWPI.Pages.Usuarios
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción en página para borrar cita usuario: {DateTime.Now.ToString()}");
             }
         }
 
@@ -55,7 +65,7 @@ namespace DAWPI.Pages.Usuarios
                     Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                     if (cita == null)
                     {
-                        Response.Redirect("/Administrador/Medicos");
+                        Response.Redirect("/Usuarios/Citas");
                     }
                     else
                     {
@@ -63,13 +73,15 @@ namespace DAWPI.Pages.Usuarios
                     }
                 }
 
-                bool citaPendiente = false;
-
                 if (!string.IsNullOrEmpty(confirmacion) && confirmacion.Trim() == citaDTO.Asunto)
                 {
                     Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                     _db.Remove(cita);
                     _db.SaveChanges();
+
+                    var message = $"Cita borrada con éxito: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message);
+                    WriteLogToFile(message);
 
 
                 }
@@ -81,10 +93,27 @@ namespace DAWPI.Pages.Usuarios
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}");
             }
 
             return RedirectToPage("/Usuarios/Citas");
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
         }
     }
 }

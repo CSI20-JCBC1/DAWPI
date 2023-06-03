@@ -1,6 +1,7 @@
 using DAL.DAOaDTO;
 using DAL.DTO;
 using DAL.Models;
+using DAWPI.Pages.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,14 @@ namespace DAWPI.Pages.Medicos
     [Authorize(Roles = "Médico")]
     public class DetallesCitaModel : PageModel
     {
+        private readonly ILogger<DetallesCitaModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-
-        public DetallesCitaModel(DatabasePiContext db)
+        public DetallesCitaModel(DatabasePiContext db, ILogger<DetallesCitaModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         [BindProperty]
@@ -39,6 +43,9 @@ namespace DAWPI.Pages.Medicos
         {
             try
             {
+                var message = $"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
                 // Desactiva el caché para la página
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
 
@@ -81,78 +88,108 @@ namespace DAWPI.Pages.Medicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción en la página de detalles de la cita del médico: {DateTime.Now.ToString()}");
             }
         }
 
         public IActionResult OnPostAsignar()
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return Page();
-            }
-
-            Detalle = HttpContext.Session.GetInt32("detalle");
-
-            string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
-            if (Detalle.HasValue)
-            {
-                Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
-                CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
-                Cita = citaDTO;
-                if (cita != null)
+                if (!ModelState.IsValid)
                 {
-                    // Parsea la fecha y hora ingresadas
-                    DateOnly fechaCita = DateOnly.ParseExact(Fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    TimeOnly horaCita = TimeOnly.ParseExact(Hora, "HH:mm", CultureInfo.InvariantCulture);
+                    return Page();
+                }
 
-                    Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == emailUsuario);
+                Detalle = HttpContext.Session.GetInt32("detalle");
 
-                    // Obtener las citas del médico para la misma fecha
-                    List<Cita> citasMedico = _db.Citas
-                        .Where(c => c.NombreMedico == usuario.NombreCompleto && c.Fecha == fechaCita)
-                        .ToList();
-
-                    bool horaInvalida = false;
-
-                    // Verifica si la hora seleccionada está disponible
-                    foreach (Cita citaMedico in citasMedico)
+                string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
+                if (Detalle.HasValue)
+                {
+                    Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
+                    CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
+                    Cita = citaDTO;
+                    if (cita != null)
                     {
-                        TimeOnly horaCitaMedico = (TimeOnly)citaMedico.Hora;
-                        TimeOnly horaAbajo = horaCitaMedico.AddMinutes(-30);
-                        TimeOnly horaArriba = horaCitaMedico.AddMinutes(30);
+                        // Parsea la fecha y hora ingresadas
+                        DateOnly fechaCita = DateOnly.ParseExact(Fecha, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        TimeOnly horaCita = TimeOnly.ParseExact(Hora, "HH:mm", CultureInfo.InvariantCulture);
 
-                        if (horaCita >= horaAbajo && horaCita <= horaArriba)
+                        Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == emailUsuario);
+
+                        // Obtener las citas del médico para la misma fecha
+                        List<Cita> citasMedico = _db.Citas
+                            .Where(c => c.NombreMedico == usuario.NombreCompleto && c.Fecha == fechaCita)
+                            .ToList();
+
+                        bool horaInvalida = false;
+
+                        // Verifica si la hora seleccionada está disponible
+                        foreach (Cita citaMedico in citasMedico)
                         {
-                            horaInvalida = true;
-                            break;
+                            TimeOnly horaCitaMedico = (TimeOnly)citaMedico.Hora;
+                            TimeOnly horaAbajo = horaCitaMedico.AddMinutes(-30);
+                            TimeOnly horaArriba = horaCitaMedico.AddMinutes(30);
+
+                            if (horaCita >= horaAbajo && horaCita <= horaArriba)
+                            {
+                                horaInvalida = true;
+                                break;
+                            }
                         }
-                    }
 
-                    DateTime fechaActual = DateTime.Today;
-                    DateOnly fechaHoy = new DateOnly(fechaActual.Year, fechaActual.Month, fechaActual.Day);
+                        DateTime fechaActual = DateTime.Today;
+                        DateOnly fechaHoy = new DateOnly(fechaActual.Year, fechaActual.Month, fechaActual.Day);
 
-                    if (!horaInvalida && !(fechaCita <= fechaHoy))
-                    {
-                        // Actualiza la cita con la nueva fecha, hora y estado
-                        cita.Fecha = fechaCita;
-                        cita.Hora = horaCita;
-                        cita.EstadoCita = "A";
-                        _db.SaveChanges();
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "La fecha introducida o la hora no están disponibles, intente insertar una fecha válida o que el horario de citas en el mismo día no coincidan"); // Agrega un mensaje de error al modelo de estado
-                        return Page();
+                        if (!horaInvalida && !(fechaCita <= fechaHoy))
+                        {
+                            // Actualiza la cita con la nueva fecha, hora y estado
+                            cita.Fecha = fechaCita;
+                            cita.Hora = horaCita;
+                            cita.EstadoCita = "A";
+                            _db.SaveChanges();
+
+                            var message = $"Fecha y hora asignadas a la cita con éxito: {DateTime.Now.ToString()}";
+                            _logger.LogInformation(message);
+                            WriteLogToFile(message);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "La fecha introducida o la hora no están disponibles, intente insertar una fecha válida o que el horario de citas en el mismo día no coincidan"); // Agrega un mensaje de error al modelo de estado
+                            return Page();
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Excepción ocurrida al asignar fecha y hora a la cita: {DateTime.Now.ToString()}");
+            }
+
 
             // Redirecciona a la página de citas
             return RedirectToPage("/Medicos/Citas");
         }
 
-
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
+        }
     }
 
 }

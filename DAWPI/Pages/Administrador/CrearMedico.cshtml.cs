@@ -156,7 +156,8 @@ namespace DAWPI.Pages.Administrador
             {
                 _logger.LogInformation(e.ToString());
                 WriteLogToFile($"Se ha producido una excepción la página para crear médico: {DateTime.Now.ToString()}");
-                return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
+                ModelState.AddModelError(string.Empty, "Se produjo un error al crear el médico. Por favor, intenta nuevamente más tarde.");
+                return Page();
             }
             return RedirectToPage("/Administrador/Medicos");
         }

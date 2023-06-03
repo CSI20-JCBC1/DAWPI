@@ -1,6 +1,7 @@
 using DAL.DTO;
 using DAL.DTOaDAO;
 using DAL.Models;
+using DAWPI.Pages.Medicos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,7 +12,7 @@ namespace DAWPI.Pages.Usuarios
     [Authorize(Roles = "Paciente")]
     public class PedirCitaModel : PageModel
     {
-        private readonly DatabasePiContext _db;
+
         [BindProperty]
         public string Asunto { get; set; }
 
@@ -20,26 +21,46 @@ namespace DAWPI.Pages.Usuarios
 
         public string EmailUsuario { get; set; }
 
-        public PedirCitaModel(DatabasePiContext db)
+        private readonly ILogger<PedirCitaModel> _logger;
+        private readonly string _logFilePath;
+        private readonly DatabasePiContext _db;
+        public PedirCitaModel(DatabasePiContext db, ILogger<PedirCitaModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         public void OnGet()
         {
+            try
+            {
+                var message = $"Entrando en página para pedir cita: {DateTime.Now.ToString()}";
+                _logger.LogInformation(message);
+                WriteLogToFile(message);
+            }
+            catch (Exception e)
+            {
+
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Excepcion en la página pedir cita: {DateTime.Now.ToString()}");
+            }
+
         }
 
         public IActionResult OnPost()
         {
-            try {
+            try
+            {
+
 
                 EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
 
-                    Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
+                Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
 
-                    CitaDTO citaDTO = new CitaDTO(Asunto, usuario.NombreCompleto, Sintomas);
+                CitaDTO citaDTO = new CitaDTO(Asunto, usuario.NombreCompleto, Sintomas);
 
-                    Cita cita = CitaDTOaDAO.citaDTOaDAO(citaDTO);
+                Cita cita = CitaDTOaDAO.citaDTOaDAO(citaDTO);
 
                 if (cita == null)
                 {
@@ -50,14 +71,37 @@ namespace DAWPI.Pages.Usuarios
                 {
                     _db.Add(cita);
                     _db.SaveChanges();
+
+                    var message = $"Cita pedida con éxito: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message);
+                    WriteLogToFile(message);
                 }
-                
-            }catch (Exception e) 
+
+            }
+            catch (Exception e)
             {
-                Console.WriteLine(e);
+
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile($"Excepcion provocada al pedir cita: {DateTime.Now.ToString()}");
             }
 
             return RedirectToPage("/Usuarios/Citas");
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
         }
     }
 }

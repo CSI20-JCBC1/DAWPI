@@ -83,7 +83,7 @@ namespace DAWPI.Pages.Register
                     message.To.Add(new MailboxAddress(usuario.NombreCompleto, email)); // Destinatario
                     message.Subject = "Verificación de correo electrónico";
 
-                    string verificationLink = "https://localhost:7082/Register/Verificacion"; // Enlace de verificación
+                    string verificationLink = "https://localhost:7082/Register/Verificacion"; //https://clinicajcbc.juancarlosbada.es/Register/Verificacion // Enlace de verificación
 
 
                     // Cuerpo del mensaje
