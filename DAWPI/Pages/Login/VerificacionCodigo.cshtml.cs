@@ -22,6 +22,7 @@ namespace DAWPI.Pages.Login
 
         [BindProperty]
         public string Codigo { get; set; }
+
         public void OnGet()
         {
         }
@@ -30,10 +31,13 @@ namespace DAWPI.Pages.Login
         {
             try
             {
+                // Obtener el correo electrónico y el código de verificación almacenados en la sesión
                 Email = HttpContext.Session.GetString("Email");
                 Code = HttpContext.Session.GetString("Code");
+
                 Console.WriteLine(Code);
                 Console.WriteLine(Codigo);
+
                 if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Code))
                 {
                     ModelState.AddModelError(string.Empty, "Error: No se encontró información de verificación en la sesión.");
@@ -42,21 +46,45 @@ namespace DAWPI.Pages.Login
 
                 if (Code == Codigo)
                 {
+                    // El código de verificación es válido
+
+                    var message = $"Código para guardar contraseña verificado con éxito: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message);
+                    WriteLogToFile(message);
 
                     HttpContext.Session.SetString("Email", Email);
                     return RedirectToPage("/Login/CambiarContraseña");
                 }
                 else
                 {
+                    // El código de verificación no es válido
                     ModelState.AddModelError(string.Empty, "Error: El código de verificación no es válido.");
                     return Page();
                 }
             }
             catch (Exception ex)
             {
+                // Ocurrió un error al procesar la solicitud
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al procesar la solicitud.");
                 _logger.LogError(ex, "Error al cambiar la contraseña");
+                WriteLogToFile($"Se ha producido una excepción al intentar borrar paciente o médico: {DateTime.Now.ToString()}");
                 return Page();
+            }
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

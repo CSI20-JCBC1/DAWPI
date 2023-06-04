@@ -6,6 +6,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using DAL.Models;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 
 namespace DAWPI.Pages.Login
 {
@@ -26,7 +27,7 @@ namespace DAWPI.Pages.Login
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
-            // Validar el correo electrónico (puedes agregar más validaciones si es necesario)
+            // Validar el correo electrónico
             if (string.IsNullOrEmpty(Email))
             {
                 ModelState.AddModelError(string.Empty, "El correo electrónico es requerido.");
@@ -70,6 +71,10 @@ namespace DAWPI.Pages.Login
                         await client.DisconnectAsync(true);
                     }
 
+                    var message1 = $"Correo para reestablecer contraseña enviado con éxito: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message1);
+                    WriteLogToFile(message1);
+
                     HttpContext.Session.SetString("Email", Email);
                     HttpContext.Session.SetString("Code", code);
                     return RedirectToPage("/Login/VerificacionCodigo");
@@ -77,10 +82,12 @@ namespace DAWPI.Pages.Login
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al enviar el correo electrónico. Por favor, inténtalo de nuevo.");
-                // Puedes agregar el registro del error si lo deseas: _logger.LogError(ex, "Error al enviar correo electrónico");
+                _logger.LogInformation(ex.ToString());
+                WriteLogToFile($"Se ha producido una excepción al intentar enviar código de verificación: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al enviar el correo electrónico. Por favor, inténtalo de nuevo.");  
                 return Page();
             }
+            
 
         }
 
@@ -101,6 +108,22 @@ namespace DAWPI.Pages.Login
                 }
 
                 return new string(result);
+            }
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
             }
         }
     }

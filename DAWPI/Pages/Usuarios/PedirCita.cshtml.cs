@@ -65,7 +65,7 @@ namespace DAWPI.Pages.Usuarios
                 if (cita == null)
                 {
                     ModelState.AddModelError(string.Empty, "Error al solicitar la cita, ahora mismo es imposible crear la cita debido a algunos problemas, inténtelo más tarde."); // Se agrega un mensaje de error al modelo de estado
-                    return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
+                    return Page();
                 }
                 else
                 {
@@ -83,7 +83,10 @@ namespace DAWPI.Pages.Usuarios
 
                 _logger.LogInformation(e.ToString());
                 WriteLogToFile($"Excepcion provocada al pedir cita: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "Error al solicitar la cita, ahora mismo es imposible crear la cita debido a algunos problemas, inténtelo más tarde."); // Se agrega un mensaje de error al modelo de estado
+                return Page();
             }
+
 
             return RedirectToPage("/Usuarios/Citas");
         }

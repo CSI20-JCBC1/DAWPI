@@ -34,7 +34,7 @@ namespace DAWPI.Pages.Usuarios
                 detalle = HttpContext.Session.GetInt32("detalle");
                 if (detalle.HasValue)
                 {
-                   Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
+                    Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
                     if (cita == null)
                     {
                         Response.Redirect("/Usuarios/Citas");
@@ -73,22 +73,30 @@ namespace DAWPI.Pages.Usuarios
                     }
                 }
 
-                if (!string.IsNullOrEmpty(confirmacion) && confirmacion.Trim() == citaDTO.Asunto)
+                if (citaDTO == null)
                 {
-                    Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
-                    _db.Remove(cita);
-                    _db.SaveChanges();
-
-                    var message = $"Cita borrada con éxito: {DateTime.Now.ToString()}";
-                    _logger.LogInformation(message);
-                    WriteLogToFile(message);
-
-
+                    return RedirectToPage("/Usuarios/Citas");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "El nombre completo no coincide. Inténtalo de nuevo.");
-                    return Page();
+
+                    if (!string.IsNullOrEmpty(confirmacion) && confirmacion.Trim() == citaDTO.Asunto)
+                    {
+                        Cita? cita = _db.Citas.FirstOrDefault(c => c.Id == detalle);
+                        _db.Remove(cita);
+                        _db.SaveChanges();
+
+                        var message = $"Cita borrada con éxito: {DateTime.Now.ToString()}";
+                        _logger.LogInformation(message);
+                        WriteLogToFile(message);
+
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "El nombre completo no coincide. Inténtalo de nuevo.");
+                        return Page();
+                    }
                 }
             }
             catch (Exception ex)

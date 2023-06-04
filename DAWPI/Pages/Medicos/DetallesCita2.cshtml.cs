@@ -15,6 +15,7 @@ namespace DAWPI.Pages.Medicos
         private readonly ILogger<DetallesCita2Model> _logger;
         private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
+
         public DetallesCita2Model(DatabasePiContext db, ILogger<DetallesCita2Model> logger)
         {
             _db = db;
@@ -31,7 +32,6 @@ namespace DAWPI.Pages.Medicos
         [BindProperty]
         public string Solucion { get; set; }
 
-
         public int? Detalle { get; set; }
 
         public void OnGet()
@@ -44,19 +44,17 @@ namespace DAWPI.Pages.Medicos
                 Detalle = HttpContext.Session.GetInt32("detalle");
                 if (Detalle.HasValue)
                 {
+                    // Obtiene la cita correspondiente al detalle
                     Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
                     CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                     Cita = citaDTO;
                 }
-
             }
             catch (Exception ex)
             {
-
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Excepción en la página de detalles de la cita del médico: {DateTime.Now.ToString()}");
             }
-
         }
 
         public IActionResult OnPostDiagnosticar()
@@ -75,14 +73,16 @@ namespace DAWPI.Pages.Medicos
                 string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
                 if (Detalle.HasValue)
                 {
+                    // Obtiene la cita correspondiente al detalle
                     Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
                     CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                     Cita = citaDTO;
                     if (cita != null)
                     {
+                        // Actualiza los datos de la cita con el diagnóstico
                         cita.Enfermedad = Enfermedad;
                         cita.Solucion = Solucion;
-                        cita.EstadoCita = "A";
+                        cita.EstadoCita = "F";
                         _db.SaveChanges();
 
                         var message = $"Diagnóstico realizado con éxito: {DateTime.Now.ToString()}";
@@ -93,11 +93,11 @@ namespace DAWPI.Pages.Medicos
             }
             catch (Exception ex)
             {
-
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Excepción ocurrida al diagnosticar la enfermedad del paciente: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "Error al diagnosticar, intentelo más tarde.");
+                return Page();
             }
-
 
             // Redirecciona a la página de citas
             return RedirectToPage("/Medicos/Citas");
@@ -118,7 +118,5 @@ namespace DAWPI.Pages.Medicos
                 _logger.LogInformation(ex.ToString());
             }
         }
-
     }
 }
-

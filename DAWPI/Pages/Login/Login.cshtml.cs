@@ -121,7 +121,7 @@ namespace DAWPI.Pages.Login
                  
                 _logger.LogInformation(e.Message);
                 WriteLogToFile($"Excepción en la página de inicio de sesión: {DateTime.Now.ToString()}");
-                ModelState.AddModelError(string.Empty, "Ahora mismo es imposible iniciar la sesión.");
+                ModelState.AddModelError(string.Empty, "Ahora mismo es imposible iniciar la sesión. Intentelo más tarde.");
                 return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
             }
 

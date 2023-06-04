@@ -20,6 +20,7 @@ namespace DAWPI.Pages.Medicos
         private readonly ILogger<DetallesCitaModel> _logger;
         private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
+
         public DetallesCitaModel(DatabasePiContext db, ILogger<DetallesCitaModel> logger)
         {
             _db = db;
@@ -36,7 +37,6 @@ namespace DAWPI.Pages.Medicos
         [BindProperty]
         public string Hora { get; set; }
 
-
         public int? Detalle { get; set; }
 
         public void OnGet()
@@ -46,17 +46,22 @@ namespace DAWPI.Pages.Medicos
                 var message = $"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}";
                 _logger.LogInformation(message);
                 WriteLogToFile(message);
+
                 // Desactiva el caché para la página
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
 
                 Detalle = HttpContext.Session.GetInt32("detalle");
                 if (Detalle.HasValue)
                 {
+                    // Obtiene la cita correspondiente al detalle
                     Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
                     CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                     Cita = citaDTO;
 
+                    // Obtiene la lista de estados de cita
                     List<CatEstadoCitum> listaEstadoCita = _db.CatEstadoCita.ToList();
+
+                    // Asigna el nombre del estado de cita correspondiente a la cita actual
                     foreach (var estadoCita in listaEstadoCita)
                     {
                         if (Cita.EstadoCita == estadoCita.EstadoCita)
@@ -65,7 +70,10 @@ namespace DAWPI.Pages.Medicos
                         }
                     }
 
+                    // Obtiene la lista de salas de cita
                     List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
+
+                    // Asigna el nombre de la sala de cita correspondiente a la cita actual
                     foreach (var sala in listaSalaCita)
                     {
                         if (Cita.CodSala == sala.CodSala)
@@ -74,7 +82,10 @@ namespace DAWPI.Pages.Medicos
                         }
                     }
 
+                    // Obtiene la lista de plantas de cita
                     List<CatPlantaCitum> listaPlantaCita = _db.CatPlantaCita.ToList();
+
+                    // Asigna el nombre de la planta de cita correspondiente a la cita actual
                     foreach (var planta in listaPlantaCita)
                     {
                         if (Cita.CodPlanta == planta.CodPlanta)
@@ -82,13 +93,10 @@ namespace DAWPI.Pages.Medicos
                             Cita.CodPlanta = planta.NombrePlanta;
                         }
                     }
-
-
                 }
             }
             catch (Exception ex)
             {
-                
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Excepción en la página de detalles de la cita del médico: {DateTime.Now.ToString()}");
             }
@@ -108,6 +116,7 @@ namespace DAWPI.Pages.Medicos
                 string emailUsuario = User.FindFirst("EmailUsuario")?.Value;
                 if (Detalle.HasValue)
                 {
+                    // Obtiene la cita correspondiente al detalle
                     Cita cita = _db.Citas.FirstOrDefault(c => c.Id == Detalle);
                     CitaDTO citaDTO = CitaDAOaDTO.citaDAOaDTO(cita);
                     Cita = citaDTO;
@@ -119,7 +128,7 @@ namespace DAWPI.Pages.Medicos
 
                         Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == emailUsuario);
 
-                        // Obtener las citas del médico para la misma fecha
+                        // Obtiene las citas del médico para la misma fecha
                         List<Cita> citasMedico = _db.Citas
                             .Where(c => c.NombreMedico == usuario.NombreCompleto && c.Fecha == fechaCita)
                             .ToList();
@@ -165,11 +174,11 @@ namespace DAWPI.Pages.Medicos
             }
             catch (Exception ex)
             {
-
                 _logger.LogInformation(ex.ToString());
-                WriteLogToFile($"Excepción ocurrida al asignar fecha y hora a la cita: {DateTime.Now.ToString()}");
+                WriteLogToFile($"Se ha producido una excepción al intentar asignar la cita: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "Error al asignar la cita, intentelo más tarde.");
+                return Page();
             }
-
 
             // Redirecciona a la página de citas
             return RedirectToPage("/Medicos/Citas");
@@ -191,5 +200,4 @@ namespace DAWPI.Pages.Medicos
             }
         }
     }
-
 }

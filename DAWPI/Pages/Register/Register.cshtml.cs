@@ -8,14 +8,21 @@ using MimeKit;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DAWPI.Pages.Medicos;
+using Microsoft.Extensions.Logging;
+
 namespace DAWPI.Pages.Register
 {
     public class RegisterModel : PageModel
     {
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
-        public RegisterModel(DatabasePiContext db)
+        public RegisterModel(DatabasePiContext db, ILogger<RegisterModel> logger)
         {
             _db = db;
+            _logger = logger;
+            _logFilePath = @"C:\logs\log.txt";
         }
 
         [BindProperty]
@@ -83,7 +90,7 @@ namespace DAWPI.Pages.Register
                     message.To.Add(new MailboxAddress(usuario.NombreCompleto, email)); // Destinatario
                     message.Subject = "Verificación de correo electrónico";
 
-                    string verificationLink = "https://localhost:7082/Register/Verificacion"; //https://clinicajcbc.juancarlosbada.es/Register/Verificacion // Enlace de verificación
+                    string verificationLink = "https://clinicajcbc.juancarlosbada.es/Register/Verificacion"; // // Enlace de verificación
 
 
                     // Cuerpo del mensaje
@@ -101,13 +108,35 @@ namespace DAWPI.Pages.Register
                         await client.DisconnectAsync(true);
                     }
 
+                    var message1 = $"Enviado correo de verificación de contrasña: {DateTime.Now.ToString()}";
+                    _logger.LogInformation(message1);
+                    WriteLogToFile(message1);
+
                 }
             }
             catch (Exception e)
-            { 
-                Console.WriteLine(e.Message);
+            {
+                var message = $"Entrando en página para la gestión de pacientes: {DateTime.Now.ToString()}";
+                _logger.LogInformation(e.ToString());
+                WriteLogToFile(message);
             }
             return RedirectToPage("../Login/Login");
+        }
+
+        private void WriteLogToFile(string message)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_logFilePath));
+                using (var writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.ToString());
+            }
         }
     }
 
