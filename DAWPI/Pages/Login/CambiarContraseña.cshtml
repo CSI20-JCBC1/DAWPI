@@ -1,7 +1,6 @@
 ﻿@page
-@model DAWPI.Pages.Register.RegisterModel
+@model DAWPI.Pages.Login.CambiarContraseñaModel
 @{
-    ViewData["Title"] = "Register";
 }
 
 <head>
@@ -200,24 +199,10 @@
 <div>
     <form method="post">
         <fieldset>
-            <legend>Register</legend>
+            <legend>Cambio de contraseña</legend>
+          
             <div>
-                <label for="nombre">Nombre y apellidos</label>
-                <input type="text" name="nombre" id="nombre" value="" placeholder="Nombre y apellidos" required>
-            </div>
-            <br />
-            <div>
-                <label for="movil">Teléfono</label>
-                <input type="text" name="movil" id="movil" value="" placeholder="Teléfono" required>
-            </div>
-            <br />
-            <div>
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" value="" placeholder="Email" required>
-            </div>
-            <br />
-            <div>
-                <label for="contrasenia">Clave de acceso</label>
+                <label for="contrasenia">Introduzca su nueva contraseña</label>
                 <input type="password" name="contrasenia" id="contrasenia" value="" placeholder="Clave de acceso" maxlength="16" required>
                 <button type="button" id="togglePassword" class="password-toggle-button">
                     <i id="eyeIcon" class="fas fa-eye"></i>
@@ -254,3 +239,7 @@
         </fieldset>
     </form>
 </div>
+
+</html>
+
+

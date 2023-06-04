@@ -42,6 +42,9 @@ namespace DAWPI.Pages.Login
 
         public void OnGet()
         {
+            var message = $"Entrando en página para iniciar sesión: {DateTime.Now.ToString()}";
+            _logger.LogInformation(message);
+            WriteLogToFile(message);
         }
 
         [ActionName("MiLogin")]
@@ -50,9 +53,7 @@ namespace DAWPI.Pages.Login
             try
             {
 
-                var message = $"Entrando en página para iniciar sesión: {DateTime.Now.ToString()}";
-                _logger.LogInformation(message);
-                WriteLogToFile(message);
+               
 
                 var usuario = _db.Usuarios.FirstOrDefault(e => e.Email == Email); // Se busca al usuario en la base de datos por su correo electrónico
 
@@ -82,7 +83,7 @@ namespace DAWPI.Pages.Login
                         var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
                         await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
 
-                        message = $"Sesión iniciada con éxito: {DateTime.Now.ToString()}";
+                       var message = $"Sesión iniciada con éxito: {DateTime.Now.ToString()}";
                         _logger.LogInformation(message);
                         WriteLogToFile(message);
 
@@ -120,7 +121,7 @@ namespace DAWPI.Pages.Login
                  
                 _logger.LogInformation(e.Message);
                 WriteLogToFile($"Excepción en la página de inicio de sesión: {DateTime.Now.ToString()}");
-
+                ModelState.AddModelError(string.Empty, "Ahora mismo es imposible iniciar la sesión.");
                 return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
             }
 
