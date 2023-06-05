@@ -1,6 +1,10 @@
 using DAL.Models;
-
-
+using System.Globalization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Localization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureLogging(logging =>
@@ -12,7 +16,17 @@ builder.Host.ConfigureLogging(logging =>
   
 });
 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("es-ES")
+    };
 
+    options.DefaultRequestCulture = new RequestCulture("es-ES");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 // Registrar DatabasePiContext como servicio Scoped
 builder.Services.AddScoped<DatabasePiContext>();
@@ -46,6 +60,8 @@ builder.Services.AddAuthentication("AuthScheme").AddCookie("AuthScheme", options
 });
 
 var app = builder.Build();
+
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 // Si la aplicación se está ejecutando en un entorno diferente al de desarrollo, utiliza un middleware para manejar errores.
 if (!app.Environment.IsDevelopment())
