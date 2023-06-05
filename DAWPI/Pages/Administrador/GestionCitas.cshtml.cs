@@ -31,6 +31,8 @@ namespace DAWPI.Pages.Administrador
 
         // Lista de citas en formato DTO
         public List<CitaDTO> listaCitasDTO { get; set; }
+        //Para mostrar el nombre del médico en la lista
+        public UsuarioDTO usuarioDTO { get; set; }
 
         // Método ejecutado al cargar la página
         public void OnGet(/*int detalle*/)
@@ -47,6 +49,7 @@ namespace DAWPI.Pages.Administrador
                 {
                     // Obtener el usuario correspondiente al detalle
                     Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
+                    usuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
 
                     usuId = usuario.Id;
 

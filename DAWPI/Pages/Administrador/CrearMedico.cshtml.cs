@@ -56,10 +56,12 @@ namespace DAWPI.Pages.Administrador
         {
             try
             {
+                //Mensaje para que aparezca en nuestro log
                 var message = $"Entrando en página para crear médico: {DateTime.Now.ToString()}";
                 _logger.LogInformation(message);
                 WriteLogToFile(message);
 
+                //Mostramos la listaDTO en la vista
                 List<CatSalaCitum> listaSalaCita = _db.CatSalaCita.ToList();
 
                 listaSalaCitaDTO = CatSalaDAOaDTO.listacatSalaDAOaDTO(listaSalaCita);

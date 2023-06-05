@@ -10,16 +10,16 @@
 
 <form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
     <div class="container">
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Mis Citas</h2>
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Citas de @Model.UsuarioDTO.NombreCompleto</h2>
 
         <div style="margin-bottom: 10px;">
             <label for="estadoCita" style="font-weight: bold;">Filtrar por estado de la cita:</label>
             <select class="form-control" id="estadoCita" name="estadoCita" style="width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; appearance: none; background-color: #f5f5f5;">
                 <option value="">Todos</option>
-                <option value="Pendiente de asignación">Pendiente de asignación</option>
-                <option value="Pendiente de fecha y hora">Pendiente de fecha y hora</option>
-                <option value="Asignada">Asignada</option>
-                <option value="Finalizada">Finalizada</option>
+                @foreach (var estado in Model.listaEstadoDTO)
+                {
+                    <option value="@estado.DescEstadoCita">@estado.DescEstadoCita</option>
+                }
             </select>
         </div>
 

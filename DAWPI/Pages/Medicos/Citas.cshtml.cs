@@ -29,6 +29,7 @@ namespace DAWPI.Pages.Medicos
 
         public List<CitaDTO> listaCitasDTO { get; set; }
         public List<CatEstadoCitaDTO> listaEstadoDTO { get; set; }
+        public UsuarioDTO usuarioDTO { get; set; }
 
         public void OnGet()
         {
@@ -42,6 +43,8 @@ namespace DAWPI.Pages.Medicos
 
                 // Obtener el usuario actual a partir del correo electrónico
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
+
+                usuarioDTO= UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
 
                 // Obtener todas las citas
                 List<Cita> listaCitas = _db.Citas.ToList();

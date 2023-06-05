@@ -16,6 +16,8 @@ namespace DAWPI.Pages.Usuarios
         public int detalle { get; set; }
         public string EmailUsuario { get; set; }
 
+        public UsuarioDTO UsuarioDTO { get; set; }
+
         private readonly ILogger<CitasModel> _logger;
         private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
@@ -27,6 +29,7 @@ namespace DAWPI.Pages.Usuarios
         }
 
         public List<CitaDTO> listaCitasDTO { get; set; }
+        public List<CatEstadoCitaDTO> listaEstadoDTO { get; set; }
 
         public void OnGet()
         {
@@ -39,6 +42,8 @@ namespace DAWPI.Pages.Usuarios
                 WriteLogToFile(message);
 
                 Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
+
+                UsuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
 
                 List<Cita> listaCitas = _db.Citas.ToList();
 
@@ -58,7 +63,10 @@ namespace DAWPI.Pages.Usuarios
                         }
                     }
                 }
-                
+
+                List<CatEstadoCitum> listaEstados = _db.CatEstadoCita.ToList();
+                listaEstadoDTO = CatEstadoCitaDAOaDTO.listaCatEstadoCitaDAOaDTO(listaEstados);
+
             }
             catch(Exception e) {
 

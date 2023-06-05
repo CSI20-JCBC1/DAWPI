@@ -1,9 +1,13 @@
 using System;
 using System.IO;
+using DAL.DAOaDTO;
+using DAL.DTO;
+using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace DAWPI.Pages.Administrador
 {
@@ -12,17 +16,27 @@ namespace DAWPI.Pages.Administrador
     {
         private readonly ILogger<AccionesModel> _logger;
         private readonly string _logFilePath;
+        private readonly DatabasePiContext _db;
 
-        public AccionesModel(ILogger<AccionesModel> logger)
+        public AccionesModel(ILogger<AccionesModel> logger, DatabasePiContext db)
         {
             _logger = logger;
             _logFilePath = Path.Combine("C:", "logs", "log.txt");
+            _db = db;
         }
+
+        public UsuarioDTO UsuarioDTO { get; set; }
+
+        public string EmailUsuario { get; set; }
 
         public IActionResult OnGet()
         {
             try
             {
+                EmailUsuario = User.FindFirst("EmailUsuario")?.Value;
+                Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Email == EmailUsuario);
+                UsuarioDTO = UsuarioDAOaDTO.usuarioDAOaDTO(usuario);
+
                 var message = $"Entrando en página principal de administrador: {DateTime.Now}";
 
                 _logger.LogInformation(message); // Registra un mensaje informativo en el registro de la aplicación

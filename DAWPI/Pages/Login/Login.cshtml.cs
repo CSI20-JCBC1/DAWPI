@@ -40,11 +40,18 @@ namespace DAWPI.Pages.Login
             _logFilePath = @"C:\logs\log.txt";
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // Verificar si el usuario ya está autenticado
+            if (User.Identity.IsAuthenticated)
+            {
+                // Redirigir al usuario a otra página, por ejemplo, la página de inicio
+                return RedirectToPage("/Index");
+            }
             var message = $"Entrando en página para iniciar sesión: {DateTime.Now.ToString()}";
             _logger.LogInformation(message);
             WriteLogToFile(message);
+            return Page();
         }
 
         [ActionName("MiLogin")]
@@ -87,19 +94,7 @@ namespace DAWPI.Pages.Login
                         _logger.LogInformation(message);
                         WriteLogToFile(message);
 
-                        if (usuario.Rol == 2)
-                        {
-                            return RedirectToPage("/Usuarios/Citas");
-                          
-                        }
-                        else if (usuario.Rol == 0)
-                        {
-                            return RedirectToPage("/Administrador/Acciones");
-                        }
-                        else if (usuario.Rol == 1)
-                        {
-                            return RedirectToPage("/Medicos/Citas");
-                        }
+                        
                     }
                     else
                     {
