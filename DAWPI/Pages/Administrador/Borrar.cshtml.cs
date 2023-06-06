@@ -25,7 +25,7 @@ namespace DAWPI.Pages.Administrador
             _logFilePath = @"C:\logs\log.txt";
         }
 
-        // Propiedades públicas para almacenar los datos del usuario y el detalle de la página
+        //Para mostrar el nombre usuario a borrar en la vista
         public UsuarioDTO usuarioDTO { get; set; }
         public int? detalle { get; set; }
 
@@ -106,7 +106,7 @@ namespace DAWPI.Pages.Administrador
                             return Page();
                         }
 
-                        // Eliminar médico y su información adicional
+                        // Eliminar médico y su información en el catalogo
                         Usuario usuario = _db.Usuarios.FirstOrDefault(u => u.Id == detalle);
                         CatInfoMedico infomedico = _db.CatInfoMedicos.FirstOrDefault(i => i.NombreMedico == usuario.NombreCompleto);
 

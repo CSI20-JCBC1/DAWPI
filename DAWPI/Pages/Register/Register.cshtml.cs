@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DAWPI.Pages.Medicos;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 
 namespace DAWPI.Pages.Register
 {
@@ -28,12 +29,16 @@ namespace DAWPI.Pages.Register
         [BindProperty]
         public string nombre { get; set; }
         [BindProperty]
+        [RegularExpression(@"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", ErrorMessage = "Ingrese un correo electrónico válido.")]
         public string email { get; set; }
         [BindProperty]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "Ingresa un teléfono válido.")]
         public string movil { get; set; }
         [BindProperty]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Ingresa una contraseña válida.")]
         public string contrasenia { get; set; }
         [BindProperty]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Ingresa una contraseña válida.")]
         public string contrasenia2 { get; set; }
         public void OnGet()
         {

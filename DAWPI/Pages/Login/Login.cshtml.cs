@@ -6,13 +6,18 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace DAWPI.Pages.Login
 {
-    [AllowAnonymous] // Permite el acceso a esta página sin necesidad de autenticación
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         public string EmailUsuario { get; set; }
@@ -21,18 +26,23 @@ namespace DAWPI.Pages.Login
         public string MensajeExito { get; set; }
 
         [BindProperty]
-        public string Email { get; set; } // Propiedad para el campo de correo electrónico del usuario
+        [RegularExpression(@"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", ErrorMessage = "Ingrese un correo electrónico válido.")]
+        public string Email { get; set; }
 
         [BindProperty]
-        public string Contrasenia { get; set; } // Propiedad para el campo de contraseña del usuario
+        public string Contrasenia { get; set; }
 
-        public string ControlAcceso { get; set; } // Propiedad para el control de acceso del usuario
-
-        public List<RolDTO> RolDTO { get; set; } // Lista de roles del usuario en formato DTO
+        public string ControlAcceso { get; set; }
+        public List<RolDTO> RolDTO { get; set; }
 
         private readonly ILogger<LoginModel> _logger;
         private readonly string _logFilePath;
         private readonly DatabasePiContext _db;
+
+        private int MaxFailedAttempts = 5;
+        private TimeSpan LockoutDuration = TimeSpan.FromMinutes(30);
+        private string FailedAttemptsKey => $"FailedAttempts_{Email}";
+
         public LoginModel(DatabasePiContext db, ILogger<LoginModel> logger)
         {
             _db = db;
@@ -42,10 +52,8 @@ namespace DAWPI.Pages.Login
 
         public IActionResult OnGet()
         {
-            // Verificar si el usuario ya está autenticado
             if (User.Identity.IsAuthenticated)
             {
-                // Redirigir al usuario a otra página, por ejemplo, la página de inicio
                 return RedirectToPage("/Index");
             }
             var message = $"Entrando en página para iniciar sesión: {DateTime.Now.ToString()}";
@@ -55,75 +63,106 @@ namespace DAWPI.Pages.Login
         }
 
         [ActionName("MiLogin")]
-        public async Task<IActionResult> OnPostSubmitAsync() // Método para manejar el envío del formulario de inicio de sesión
+        public async Task<IActionResult> OnPostSubmitAsync()
         {
             try
             {
+                var failedAttempts = GetFailedAttempts();
 
-               
-
-                var usuario = _db.Usuarios.FirstOrDefault(e => e.Email == Email); // Se busca al usuario en la base de datos por su correo electrónico
-
-                if (usuario != null && BCrypt.Net.BCrypt.Verify(Contrasenia, usuario.Contrasenya)) // Si el usuario existe y la contraseña es correcta
+                if (failedAttempts >= MaxFailedAttempts)
                 {
+                    var lockoutEnd = HttpContext.Session.GetString("LockoutEnd");
+                    if (!string.IsNullOrEmpty(lockoutEnd) && DateTime.TryParse(lockoutEnd, out var lockoutEndTime))
+                    {
+                        if (DateTime.Now < lockoutEndTime)
+                        {
+                            ModelState.AddModelError(string.Empty, "Su cuenta está bloqueada. Inténtelo de nuevo más tarde.");
+                            return Page();
+                        }
+                        else
+                        {
+                            SetFailedAttempts(0);
+                            HttpContext.Session.Remove("LockoutEnd");
+                        }
+                    }
+                }
+
+                var usuario = _db.Usuarios.FirstOrDefault(e => e.Email == Email);
+
+                if (usuario != null && BCrypt.Net.BCrypt.Verify(Contrasenia, usuario.Contrasenya))
+                {
+                    SetFailedAttempts(0);
+
                     if (usuario.Verificado == true)
                     {
-                        List<CatRolUsuario> listaRol = _db.CatRolUsuarios.ToList(); // Se obtiene la lista de roles de usuario desde la base de datos
-                        RolDTO = RolDAOaDTO.listaRolDAOaDTO(listaRol); // Se convierte la lista de roles de usuario a formato DTO
+                        List<CatRolUsuario> listaRol = _db.CatRolUsuarios.ToList();
+                        RolDTO = RolDAOaDTO.listaRolDAOaDTO(listaRol);
 
-                        foreach (RolDTO rol in RolDTO) // Se busca el rol del usuario en la lista de roles en formato DTO
+                        foreach (RolDTO rol in RolDTO)
                         {
-                            if (usuario.Rol == rol.NivelAcceso) // Si se encuentra el rol del usuario
+                            if (usuario.Rol == rol.NivelAcceso)
                             {
-                                ControlAcceso = rol.ControlAcceso; // Se obtiene el control de acceso del usuario
+                                ControlAcceso = rol.ControlAcceso;
                                 break;
                             }
                         }
 
-                        var claims = new List<Claim> // Se crea una lista de reclamaciones para la identidad del usuario
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, usuario.Email), // Se crea una reclamación para el identificador de nombre del usuario
-                        new Claim(ClaimTypes.Role, ControlAcceso), // Se crea una reclamación para el rol del usuario
-                        new Claim("EmailUsuario", usuario.Email) // Se guarda el email en la sesion.
-                    };
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, usuario.Email),
+                            new Claim(ClaimTypes.Role, ControlAcceso),
+                            new Claim("EmailUsuario", usuario.Email)
+                        };
 
-                        var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme"); // Se crea un objeto ClaimsIdentity con las reclamaciones
-                        await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity)); // Se inicia sesión con el esquema de autenticación "AuthScheme"
+                        var claimsIdentity = new ClaimsIdentity(claims, "AuthScheme");
+                        await HttpContext.SignInAsync("AuthScheme", new ClaimsPrincipal(claimsIdentity));
 
-                       var message = $"Sesión iniciada con éxito: {DateTime.Now.ToString()}";
+                        var message = $"Sesión iniciada con éxito: {DateTime.Now.ToString()}";
                         _logger.LogInformation(message);
                         WriteLogToFile(message);
-
-                        
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Verifique su usuario para iniciar Sesión."); // Se agrega un mensaje de error al modelo de estado
-                        return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
+                        ModelState.AddModelError(string.Empty, "Verifique su usuario para iniciar Sesión.");
+                        return Page();
                     }
-
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Error, el usuario con ese email no existe o la contraseña es incorrecta."); // Se agrega un mensaje de error al modelo de estado
-                    return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
-                }
+                    failedAttempts++;
+                    SetFailedAttempts(failedAttempts);
 
+                    if (failedAttempts >= MaxFailedAttempts)
+                    {
+                        var lockoutEndTime = DateTime.Now.Add(LockoutDuration);
+                        HttpContext.Session.SetString("LockoutEnd", lockoutEndTime.ToString());
+                        ModelState.AddModelError(string.Empty, "Su cuenta está bloqueada. Inténtelo de nuevo más tarde.");
+                        return Page();
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Error, el usuario con ese email no existe o la contraseña es incorrecta.");
+                    return Page();
+                }
             }
             catch (Exception e)
             {
-                // Manejo adecuado de excepciones, como registrar los errores en un archivo de registro o mostrar un mensaje de error al usuario
-                 
                 _logger.LogInformation(e.Message);
                 WriteLogToFile($"Excepción en la página de inicio de sesión: {DateTime.Now.ToString()}");
                 ModelState.AddModelError(string.Empty, "Ahora mismo es imposible iniciar la sesión. Intentelo más tarde.");
-                return Page(); // Se devuelve la página de inicio de sesión para mostrar el mensaje de error al usuario
+                return Page();
             }
 
-            // Si se llega a este punto, significa que el inicio de sesión fue exitoso
-            return RedirectToPage("/Index"); // Se redirige al usuario a la página de inicio después de iniciar sesión
+            return RedirectToPage("/Index");
+        }
 
-            
+        private int GetFailedAttempts()
+        {
+            return HttpContext.Session.GetInt32(FailedAttemptsKey) ?? 0;
+        }
+
+        private void SetFailedAttempts(int count)
+        {
+            HttpContext.Session.SetInt32(FailedAttemptsKey, count);
         }
 
         private void WriteLogToFile(string message)
@@ -142,6 +181,4 @@ namespace DAWPI.Pages.Login
             }
         }
     }
-
 }
-

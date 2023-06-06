@@ -59,7 +59,7 @@ namespace DAWPI.Pages.Login
                     // Cuerpo del mensaje
                     message.Body = new TextPart("html")
                     {
-                        Text = $"¡Hola! Este correo es para la solicitud de cambio de contraseña. Para poder cambiar la contraseña, introduzca el siguiente código: {code}."
+                        Text = $"¡Hola! Este correo es para la solicitud de cambio de contraseña. Para poder cambiar la contraseña, introduzca el siguiente código: <strong><span style=\"background-color: yellow;\">{code}</span></strong>"
                     };
 
                     // Configuración del cliente SMTP

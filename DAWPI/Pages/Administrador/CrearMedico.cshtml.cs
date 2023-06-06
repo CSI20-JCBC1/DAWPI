@@ -24,7 +24,7 @@ namespace DAWPI.Pages.Administrador
             _logFilePath = @"C:\logs\log.txt";
         }
 
-        // Propiedades de vinculación para los campos del formulario
+        // Propiedades para recoger los campos del form
         [BindProperty]
         public string Nombre { get; set; }
 

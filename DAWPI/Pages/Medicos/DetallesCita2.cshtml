@@ -9,7 +9,7 @@
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 8px;
-        background-color: #f9f9f9;
+       background-color: rgba(248, 249, 250, 0.9);
     }
 
     .details-table {
@@ -69,10 +69,10 @@
 }
 else
 {
-<div class="details-container">
+<div class="details-container" style="background-color: rgba(248, 249, 250, 0.9);">
     <h1>Detalles de la Cita</h1>
     <form method="post">
-        <table class="details-table">
+        <table class="details-table" style="background-color: rgba(248, 249, 250, 0.9);">
             <tr>
                 <th>Asunto:</th>
                 <td>@Model.Cita.Asunto</td>

@@ -20,39 +20,42 @@
 }
 else
 {
-<form method="post" style="background-color: #f5f5f5; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
-    <div class="container">
-        <h2 style="font-size: 24px; margin-bottom: 10px;">Citas de @Model.usuarioDTO.NombreCompleto</h2>
-        <table class="table" style="font-size: 16px;">
-            <thead>
-                <tr>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Cita</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Asunto</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nombre Paciente</th>
-                    <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Estado</th>
+    <form method="post" style="background-color: rgba(245, 245, 245, 0.9); padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);">
 
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var cita in Model.listaCitasDTO)
-                {
+        <div class="container">
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Citas de @Model.usuarioDTO.NombreCompleto</h2>
+            <table class="table" style="font-size: 16px;">
+                <thead>
                     <tr>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nº Cita</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Asunto</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Nombre Paciente</th>
+                        <th style="font-weight: bold; background-color: #4CAF50; color: white; text-align: center; padding: 5px;">Estado</th>
 
-                        <td style="text-align: center; padding: 5px;">@{ cont++; @cont }</td>
-                        <td style="text-align: center; padding: 5px;">@cita.Asunto</td>
-                        <td style="text-align: center; padding: 5px;">@cita.NombrePaciente</td>
-                        <td style="text-align: center; padding: 5px;">@cita.EstadoCita</td>       
-                     
+
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var cita in Model.listaCitasDTO)
+                    {
+                        <tr>
 
-    <button asp-page-handler="NuevaCita" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;" name="detalle" id="detalle" value="@Model.usuId">Nueva Cita</button>
-    <br />
-    <br />
-</form>
+                            <td style="text-align: center; padding: 5px;">@{
+                                    cont++; @cont
+                                }</td>
+                            <td style="text-align: center; padding: 5px;">@cita.Asunto</td>
+                            <td style="text-align: center; padding: 5px;">@cita.NombrePaciente</td>
+                            <td style="text-align: center; padding: 5px;">@cita.EstadoCita</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button asp-page-handler="NuevaCita" type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 16px;" name="detalle" id="detalle" value="@Model.usuId">Nueva Cita</button>
+        <br />
+        <br />
+    </form>
 
 }

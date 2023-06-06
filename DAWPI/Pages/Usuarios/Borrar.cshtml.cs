@@ -90,7 +90,7 @@ namespace DAWPI.Pages.Usuarios
                         _logger.LogInformation(message);
                         WriteLogToFile(message);
 
-
+                        return RedirectToPage("/Usuarios/Citas");
                     }
                     else
                     {
@@ -103,9 +103,11 @@ namespace DAWPI.Pages.Usuarios
             {
                 _logger.LogInformation(ex.ToString());
                 WriteLogToFile($"Entrando en página para ver detalles de la cita del médico: {DateTime.Now.ToString()}");
+                ModelState.AddModelError(string.Empty, "No es posible borrar el usuario.");
+                return Page();
             }
 
-            return RedirectToPage("/Usuarios/Citas");
+            
         }
 
         private void WriteLogToFile(string message)

@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             height: 230px;
-            background-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.8); /* Agrega transparencia al fondo del encabezado */
             color: #fff;
             border-radius: 10px;
             text-align: center;
@@ -70,6 +70,8 @@
             justify-content: center;
             align-items: center;
             height: calc(100vh - 200px);
+            background-color: rgba(255, 255, 255, 0.8); /* Agrega transparencia al fondo del contenedor */
+            border-radius: 10px; /* Agrega bordes redondeados al contenedor */
         }
 
         .button {
@@ -137,7 +139,7 @@
         <form method="post">
             <div>
                 <button asp-page-handler="Pacientes" type="submit" class="button button1">Pacientes</button>
-                <button asp-page-handler="Medicos" type="submit" class="button button2">Medicos</button>
+                <button asp-page-handler="Medicos" type="submit" class="button button2">Médicos</button>
             </div>
         </form>
     </div>
