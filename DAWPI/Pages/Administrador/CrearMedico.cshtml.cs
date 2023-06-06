@@ -5,6 +5,7 @@ using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text.RegularExpressions;
 
@@ -27,16 +28,8 @@ namespace DAWPI.Pages.Administrador
         // Propiedades para recoger los campos del form
         [BindProperty]
         public string Nombre { get; set; }
-
-        [BindProperty]
-        public string Movil { get; set; }
-
-        [BindProperty]
-        public string Email { get; set; }
-
         [BindProperty]
         public string Especialidad { get; set; }
-
         [BindProperty]
         public string CodPlanta { get; set; }
 
@@ -44,9 +37,16 @@ namespace DAWPI.Pages.Administrador
         public string CodSala { get; set; }
 
         [BindProperty]
-        public string Contrasenia { get; set; }
-
+        [RegularExpression(@"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", ErrorMessage = "Ingrese un correo electrónico válido ...@....")]
+        public string Email { get; set; }
         [BindProperty]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "El número de teléfono debe tener exactamente 9 dígitos.")]
+        public string Movil { get; set; }
+        [BindProperty]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, una minúscula, y un carácter especial..")]
+        public string Contrasenia { get; set; }
+        [BindProperty]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una mayúscula, una minúscula, y un carácter especial..")]
         public string Contrasenia2 { get; set; }
 
         public List<CatSalaDTO> listaSalaCitaDTO { get; set; }
